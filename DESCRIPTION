@@ -1,0 +1,17 @@
+Package: workflow
+Title: A sharable but idiosyncratic workflow
+Version: 0.0.0.0001
+Authors@R: 
+    person(given = "Krzysztof",
+           family = "Sakrejda",
+           role = c("aut", "cre"),
+           email = "krzysztof.sakrejda@gmail.com",
+           comment = c(ORCID = "0000-0001-7587-355X"))
+Description: Encodes things you don't want to remember to do into hopefully readable code while avoiding a completely generic approach
+License: GPL-3
+Suggests: 
+    testthat
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
