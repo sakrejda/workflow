@@ -1,4 +1,3 @@
-
 try_load_elsewhere = function(pkg) {
   cl = parallel::makePSOCKcluster(names = 'localhost')
   outcome = try(parallel::clusterCall(cl = cl, fun = function(p) {
@@ -66,6 +65,7 @@ assure_repos = function() {
   return(getOption("repos"))
 }
 
+#' @export
 assure_package_installation = function(path = default_pkglist()) {
   options(stringsAsFactors=FALSE)
   
