@@ -22,7 +22,7 @@ set_env = function(name, value) {
   if (missing(value)) {
     stop(msg[['env-var-value-missing']])
   }
-  rlang::exec(Sys.setenv, !! a := b)
+  rlang::exec(Sys.setenv, !!a := b)
   val = Sys.getenv(a)
   if (val != a) {
     stop(msg[['env-var-set-failed']])
