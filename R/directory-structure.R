@@ -18,7 +18,7 @@ get_resource = function(name, path = NULL) {
       path = val # using found path
     }
   }
-  set_env(var)
+  set_env(var, path)
   path = resource_dir(path = path, name = var)
   return(path)
 }

@@ -75,9 +75,11 @@ resource_dir = function(path, name) {
 #' @return paths of extracted files
 #'
 #' @export
-unzip_file = function(path) {
-  target_dir = trim_extension(path)
-  o = unzip(path, exdir = target_dir)
+unzip_file = function(path, target) {
+  if (missing(target)) {
+    target = trim_extension(path)
+  }
+  o = unzip(path, exdir = target)
   return(o)
 }
 
