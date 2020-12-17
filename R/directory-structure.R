@@ -23,6 +23,11 @@ get_resource = function(name, path = NULL) {
   return(path)
 }
 
+#' @export
 data_dir = function() get_resource("data")
+
+#' @export
 artifact_dir = function() get_resource("artifact")
+
+#' @export
 build_dir = function() get_resource("build")
