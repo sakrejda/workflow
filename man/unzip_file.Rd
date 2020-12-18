@@ -4,7 +4,7 @@
 \alias{unzip_file}
 \title{Unzip a .zip file in the directory hosting the .zip file}
 \usage{
-unzip_file(path)
+unzip_file(path, target)
 }
 \arguments{
 \item{path}{path to file to unzip}
