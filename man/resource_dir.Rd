@@ -4,12 +4,12 @@
 \alias{resource_dir}
 \title{Assure that a resource directory for the named resource exists}
 \usage{
-resource_dir(path, name)
+resource_dir(name, path)
 }
 \arguments{
-\item{path}{location to of resource}
-
 \item{name}{name of environmental variable storing resource location}
+
+\item{path}{location to of resource}
 }
 \value{
 path of known-to-exist resource
