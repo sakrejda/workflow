@@ -38,13 +38,13 @@ get_dir = function(..., name = NULL, strict = TRUE) {
     stop(msg[['resource-missing-name']])
   }
   root = try(resource(name = name))
-  if (class(root) == 'try-error') {
-    if (!strict) {
+  if ('try-error' %in% class(root)) {
+    if (strict) {
+      stop(msg[['resource-not-found-error']])
+    } else {
       root = fs::path_temp()
       warning(msg[['resource-not-found']])
     }
-  } else {
-    stop(msg[['resource-not-found-error']])
   }
   path = fs::path(root, ...)
   return(path)
