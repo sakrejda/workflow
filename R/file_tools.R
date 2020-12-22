@@ -43,7 +43,7 @@ path_is_good = function(path) {
 #' @return path of known-to-exist resource
 #'
 #' @export
-resource_dir = function(path, name) { 
+resource_dir = function(name, path) { 
   if (missing(path)) {
     stop(msg[['resource-missing-path']])
   }
