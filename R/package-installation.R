@@ -1,3 +1,15 @@
+#' Check if package can be loaded
+#'
+#' Loading happens in a separate R process (that should find the same
+#' .Renviron, etc... files as the current one so this should be a reproducible
+#' check.  Returns FALSE unless the package can be loaded
+#'
+#' Does not affect state of namespace in the current session!
+#'
+#' @param pkg name of the package as a string
+#' @return TRUE iff package can be loaded
+#'
+#' @export
 try_load_elsewhere = function(pkg) {
   cl = parallel::makePSOCKcluster(names = 'localhost')
   outcome = try(parallel::clusterCall(cl = cl, fun = function(p) {
@@ -11,6 +23,14 @@ try_load_elsewhere = function(pkg) {
   return(FALSE)
 }
 
+#' Check if packages can be loaded report problems
+#'
+#' See `workflow::try_load_elsewhere` for details on check.
+#'
+#' @param pkgs vector of package names
+#' @return vector of package names for packages with load problems
+#'
+#' @export
 detect_load_problems = function(pkgs) {
   problems = character()
   default_packages = getOption("defaultPackages")
@@ -24,8 +44,22 @@ detect_load_problems = function(pkgs) {
   return(problems) 
 }
 
-default_pkglist = function() "~/.Rpackages"
+#' Default place to find list of packages
+#'
+#' one package name per line
+#'
+#' @param path where to find list
+#' @return path to package list
+#'
+#' @export
+default_pkglist = function(path = "~/.Rpackages") return(path)
 
+#' Retrieve the list of packages that should be installed
+#'
+#' @param path path to file with default list
+#' @return vector of package names to install
+#'
+#' @export
 get_pkglist = function(path = default_pkglist()) {
   if (!file.exists(path)) {
     msg = paste0("The file '", path, "' does not exist.")
@@ -35,9 +69,20 @@ get_pkglist = function(path = default_pkglist()) {
   return(pkgs)
 }
 
+#' Retrieve list of R's default packages
+#'
+#' Just avoiding brain freeze
+#'
+#' @return R's list of default packages
+#' @export
 get_default_packages = function() getOption("defaultPackages")
 
-
+#' Install a list of packages
+#'
+#' @param packages vector of package names to install
+#' @return list with namems of installs attempted, successes, and failures
+#'
+#' @export
 install_packages = function(packages = get_pkglist()) {
   libs = assure_user_lib()
   repos = assure_repos()
@@ -50,14 +95,24 @@ install_packages = function(packages = get_pkglist()) {
   return(o)
 }
    
-
+#' Make sure the path to the user's location for R packages exists
+#'
+#' @param lib_path where to put packages
+#' @return detected library paths
+#'
+#' @export
 assure_user_lib = function(lib_path = Sys.getenv("R_LIBS_USER")) {
   if (!dir.exists(lib_path))
     dir.create(lib_path, recursive=TRUE)
   lp = .libPaths(lib_path)
   return(lp)
 }
-  
+ 
+#' Make sure the repos option is set and matches the environmental variable
+#'
+#' @return URL for repos to use
+#'
+#' @export
 assure_repos = function() {
   current_repos = getOption("repos")
   current_repos['CRAN'] = Sys.getenv("R_CRAN")
@@ -65,6 +120,11 @@ assure_repos = function() {
   return(getOption("repos"))
 }
 
+#' Maks sure the list of packages is installed
+#'
+#' @param path path to list of packages (one per line)
+#' @return
+#'
 #' @export
 assure_package_installation = function(path = default_pkglist()) {
   options(stringsAsFactors=FALSE)
