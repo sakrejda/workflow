@@ -84,9 +84,9 @@ get_default_packages = function() getOption("defaultPackages")
 #'
 #' @export
 install_packages = function(packages = get_pkglist()) {
-  assure_user_lib()
+  lib = assure_user_lib()[1]
   repos = assure_repos()
-  try(utils::install.packages(pkgs = packages, repos = repos))
+  try(utils::install.packages(pkgs = packages, lib = lib, repos = repos, dependencies = TRUE))
   problems = detect_load_problems(packages)
   o = list(
     attempted = packages,
