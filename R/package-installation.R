@@ -104,7 +104,8 @@ old_packages = function(lib_path = assure_user_lib(), repos = assure_user_repos(
 #' @export
 update_packages = function(packages = old_packages(), repos = assure_repos()) {
   update.packages(lib.loc = assure_user_lib(), 
-                  repos = assure_repos())
+                  repos = assure_repos(),
+                  ask = FALSE)
   return(packages)
 }
    
