@@ -4,7 +4,11 @@
 \alias{install_packages}
 \title{Install a list of packages}
 \usage{
-install_packages(packages = get_pkglist())
+install_packages(
+  packages = get_pkglist(),
+  lib = assure_user_lib()[1],
+  repos = assure_repos()
+)
 }
 \arguments{
 \item{packages}{vector of package names to install}
