@@ -94,6 +94,16 @@ install_packages = function(packages = get_pkglist()) {
     problems = problems)
   return(o)
 }
+
+old_packages = function(lib_path = Sys.getenv("R_LIBS_USER")) {
+  old = old.packages(lib.loc = lib_path, 
+
+update_packages = function(packages = get_pkglist()) {
+  repos = assure_repos()
+  update.packages(lib.loc = assure_user_lib(), 
+                  repos = assure_repos())
+  return(packages)
+}
    
 #' Make sure the path to the user's location for R packages exists
 #'
@@ -130,6 +140,7 @@ assure_package_installation = function(path = default_pkglist()) {
   options(stringsAsFactors=FALSE)
   
   installed_packages = rownames(utils::installed.packages())
+  update_packages(installed_packages)
   non_default_packages = setdiff(installed_packages, get_default_packages())
   
   problems = detect_load_problems(installed_packages)
