@@ -95,11 +95,13 @@ install_packages = function(packages = get_pkglist()) {
   return(o)
 }
 
+#' @export
 old_packages = function(lib_path = assure_user_lib(), repos = assure_user_repos()) {
   old = old.packages(lib.loc = lib_path, repos = repos)
   return(old)
 }
 
+#' @export
 update_packages = function(packages = old_packages(), repos = assure_repos()) {
   update.packages(lib.loc = assure_user_lib(), 
                   repos = assure_repos())
