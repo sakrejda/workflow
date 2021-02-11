@@ -2,7 +2,8 @@
 #' Retrieve (weak-reference style), the named resource
 #'
 #' Here a resource is a named location on a filesystem, can be
-#' passed to fs::path, etc..., similar to here::here but more generic
+#' passed to fs::path, etc..., similar to here::here but doesn't do
+#' a complex search and allows out-of-tree references.
 #'
 #' @param name name of the resource
 #' @param path, optionally the relative path above the resource
