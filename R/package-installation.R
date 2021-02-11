@@ -110,7 +110,7 @@ update_packages = function(
   repos = assure_repos()
 ) {
   old = old_packages(lib_path, repos)
-  install_packages(old)
+  install_packages(old, lib_path, repos)
   return(old)
 }
    
