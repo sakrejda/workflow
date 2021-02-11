@@ -98,7 +98,7 @@ install_packages = function(
 }
 
 #' @export
-old_packages = function(lib_path = assure_user_lib(), repos = assure_repos()) {
+old_packages = function(lib_path = assure_user_lib()[1], repos = assure_repos()) {
   old = old.packages(lib.loc = lib_path, repos = repos)
   return(old)
 }
@@ -106,7 +106,7 @@ old_packages = function(lib_path = assure_user_lib(), repos = assure_repos()) {
 #' @export
 update_packages = function(
   packages = old_packages(), 
-  lib_path = assure_user_lib(),
+  lib_path = assure_user_lib()[1],
   repos = assure_repos()
 ) {
   old = old_packages(lib_path, repos)
