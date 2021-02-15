@@ -49,23 +49,27 @@ eval_env = function(
 #' @return list of these defaults, modified by args if specified.
 #'
 #' @export
-get_default_environ = function(
-  project_name,
-  project_version = "00.00.001",
-  project_dir = getwd(),
-  build_dir = rappdirs::user_cache_dir(
-    appname = project_name, version = project_version),
-  artifact_dir = rappdirs::user_data_dir(
-    appname = project_name, version = project_version),
-  data_dir = rappdirs::user_data_dir(
-    appname = project_name, version = project_version),
-  config_dir = rappdirs::user_config_dir(
-    appname = project_name, version = project_version),
-  r_libs = file.path(build_dir, ".R/library"),
-  r_libs_user = file.path(build_dir, ".R/library"),
-  r_cran = "https://cloud.r-project.org",
-  r_pkg_list = ".Rpackages"
-) build_environ_list(...)
+get_default_environ = function() {
+  defaults = build_environ_list( 
+    project_name = "<PROJECT-NAME>",
+    project_version = "00.00.001",
+    project_dir = getwd(),
+    build_dir = rappdirs::user_cache_dir(
+      appname = project_name, version = project_version),
+    artifact_dir = rappdirs::user_data_dir(
+      appname = project_name, version = project_version),
+    data_dir = rappdirs::user_data_dir(
+      appname = project_name, version = project_version),
+    config_dir = rappdirs::user_config_dir(
+      appname = project_name, version = project_version),
+    r_libs = file.path(build_dir, ".R/library"),
+    r_libs_user = file.path(build_dir, ".R/library"),
+    r_cran = "https://cloud.r-project.org",
+    r_pkg_list = ".Rpackages") 
+  defaults[['project_name']] = project_name
+  return(defaults)
+}
+
 
 #' Create a list of values to send to .Renviron file
 #'
