@@ -4,22 +4,7 @@
 \alias{get_default_environ}
 \title{Default environment values for the workflow}
 \usage{
-get_default_environ(
-  project_name,
-  project_version = "00.00.001",
-  project_dir = getwd(),
-  build_dir = rappdirs::user_cache_dir(appname = project_name, version =
-    project_version),
-  artifact_dir = rappdirs::user_data_dir(appname = project_name, version =
-    project_version),
-  data_dir = rappdirs::user_data_dir(appname = project_name, version = project_version),
-  config_dir = rappdirs::user_config_dir(appname = project_name, version =
-    project_version),
-  r_libs = file.path(build_dir, ".R/library"),
-  r_libs_user = file.path(build_dir, ".R/library"),
-  r_cran = "https://cloud.r-project.org",
-  r_pkg_list = ".Rpackages"
-)
+get_default_environ(project_name)
 }
 \arguments{
 \item{project_name}{arbitrary project name}
