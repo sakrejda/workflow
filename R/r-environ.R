@@ -49,23 +49,33 @@ eval_env = function(
 #' @return list of these defaults, modified by args if specified.
 #'
 #' @export
-get_default_environ = function() {
-  defaults = build_environ_list( 
-    project_name = "<PROJECT-NAME>",
-    project_version = "00.00.001",
-    project_dir = getwd(),
-    build_dir = rappdirs::user_cache_dir(
-      appname = project_name, version = project_version),
-    artifact_dir = rappdirs::user_data_dir(
-      appname = project_name, version = project_version),
-    data_dir = rappdirs::user_data_dir(
-      appname = project_name, version = project_version),
-    config_dir = rappdirs::user_config_dir(
-      appname = project_name, version = project_version),
-    r_libs = file.path(build_dir, ".R/library"),
-    r_libs_user = file.path(build_dir, ".R/library"),
-    r_cran = "https://cloud.r-project.org",
-    r_pkg_list = ".Rpackages") 
+get_default_environ = function(project_name) {
+  project_name = project_name
+  project_version = "00.00.001"
+  project_dir = getwd()
+  build_dir = rappdirs::user_cache_dir(
+    appname = project_name, version = project_version)
+  artifact_dir = rappdirs::user_data_dir(
+    appname = project_name, version = project_version)
+  data_dir = rappdirs::user_data_dir(
+    appname = project_name, version = project_version)
+  config_dir = rappdirs::user_config_dir(
+    appname = project_name, version = project_version)
+  r_libs = file.path(build_dir, ".R/library")
+  r_libs_user = file.path(build_dir, ".R/library")
+  r_cran = "https://cloud.r-project.org"
+  r_pkg_list = ".Rpackages"
+  defaults = list(
+    project_name = project_name,
+    project_version = project_version,
+    build_dir = build_dir,
+    artifact_dir = artifact_dir,
+    data_dir = data_dir,
+    config_dir = config_dir,
+    r_libs = r_libs,
+    r_libs_user = r_libs_user,
+    r_cran = r_cran,
+    r_pkg_list = r_pkg_list)
   return(defaults)
 }
 
@@ -85,8 +95,12 @@ build_environ_list = function(
   ...,
   .env = rlang::new_environment(parent = rlang::caller_env())
 ) {
-  defaults = get_default_environ(...)
   values = eval_env(..., .env = .env)
+  if ('project_name' %in% names(values)) {
+    defaults = get_default_environ(project_name = values[['project_name']])
+  } else {
+    stop("'project_name' is a required argument.")
+  }
   for (i in seq_along(defaults)) {
     default_name = names(defaults)[i]
     default_value = defaults[[i]]
@@ -128,8 +142,9 @@ set_environ = function(
   .env = rlang::new_environment(parent = rlang::caller_env()),
   .Renviron = ".Renviron"
 ) {
+  args = rlang::enquos(...)
+  e_list = build_environ_list(!!!args, .env = .env)
   s = character()
-  e_list = build_environ_list(..., .env = .env)
   for (i in seq_along(e_list)) {
     name = names(e_list)[i]
     var = toupper(name)
