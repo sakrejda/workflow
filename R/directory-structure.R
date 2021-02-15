@@ -52,10 +52,17 @@ get_dir = function(..., name = NULL, strict = TRUE) {
 }
 
 #' @export
-data_dir = function(...) get_dir(name = "data", ...)
+build_dir = function(...) get_dir(name = "build", ...)
 
 #' @export
 artifact_dir = function(...) get_dir(name = "artifact", ...)
 
 #' @export
-build_dir = function(...) get_dir(name = "build", ...)
+data_dir = function(...) get_dir(name = "data", ...)
+
+#' @export
+config_dir = function(...) get_dir(name = "config", ...)
+
+
+
+
