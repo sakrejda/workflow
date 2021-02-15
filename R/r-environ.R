@@ -65,21 +65,7 @@ get_default_environ = function(
   r_libs_user = file.path(build_dir, ".R/library"),
   r_cran = "https://cloud.r-project.org",
   r_pkg_list = ".Rpackages"
-) {
-  defaults = list(
-    project_name = project_name,
-    project_version = project_version,
-    project_dir = project_dir,
-    build_dir = build_dir,
-    artifact_dir = artifact_dir,
-    data_dir = data_dir,
-    config_dir = config_dir,
-    r_libs = r_libs,
-    r_libs_user = r_libs_user,
-    r_cran = r_cran,
-    r_pkg_list = r_pkg_list)
-  return(defaults)
-}
+) build_environ_list(...)
 
 #' Create a list of values to send to .Renviron file
 #'
