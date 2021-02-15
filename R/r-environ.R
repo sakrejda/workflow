@@ -66,7 +66,6 @@ get_default_environ = function() {
     r_libs_user = file.path(build_dir, ".R/library"),
     r_cran = "https://cloud.r-project.org",
     r_pkg_list = ".Rpackages") 
-  defaults[['project_name']] = project_name
   return(defaults)
 }
 
