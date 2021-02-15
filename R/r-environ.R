@@ -17,7 +17,7 @@ eval_env = function(
   expr_names = names(exprs)
   for (i in seq_along(exprs)) {
     name = expr_names[i]
-    value = try(rlang::eval_tidy(expr = exprs[[i]], env = .env))
+    value = try(rlang::eval_tidy(expr = exprs[[i]], data = rlang::new_data_mask(.env), env = .env))
     if ('try-error' %in% class(value)) {
       rlang::abort(message = paste0(
         "Building .Renviron failed at argument #", i, ": '", name, "', ",
