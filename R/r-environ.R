@@ -61,6 +61,8 @@ get_default_environ = function(project_name) {
     appname = project_name, version = project_version)
   config_dir = rappdirs::user_config_dir(
     appname = project_name, version = project_version)
+  cache_dir = rappdirs::user_cache_dir(
+    appname = project_name, version = project_version)
   r_libs = file.path(build_dir, ".R/library")
   r_libs_user = file.path(build_dir, ".R/library")
   r_cran = "https://cloud.r-project.org"
@@ -72,6 +74,7 @@ get_default_environ = function(project_name) {
     artifact_dir = artifact_dir,
     data_dir = data_dir,
     config_dir = config_dir,
+    cache_dir = cache_dir,
     r_libs = r_libs,
     r_libs_user = r_libs_user,
     r_cran = r_cran,

@@ -4,7 +4,12 @@
 \alias{assure_package_installation}
 \title{Maks sure the list of packages is installed}
 \usage{
-assure_package_installation(path = default_pkglist())
+assure_package_installation(
+  path = default_pkglist(),
+  lib = assure_user_lib()[1],
+  repos = assure_repos(),
+  dependencies = c("Depends", "Imports")
+)
 }
 \arguments{
 \item{path}{path to list of packages (one per line)}

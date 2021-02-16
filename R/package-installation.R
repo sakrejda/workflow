@@ -86,14 +86,51 @@ get_default_packages = function() getOption("defaultPackages")
 install_packages = function(
   packages = get_pkglist(),
   lib = assure_user_lib()[1],
-  repos = assure_repos()
+  repos = assure_repos(),
+  dependencies = c("Depends", "Imports")
 ) {
-  try(utils::install.packages(pkgs = packages, lib = lib, repos = repos, dependencies = TRUE))
+  try(remotes::install_cran(pkgs = packages, lib = lib, 
+    repos = repos, dependencies = dependencies))
   problems = detect_load_problems(packages)
   o = list(
     attempted = packages,
     success = setdiff(packages, problems),
     problems = problems)
+  return(o)
+}
+
+
+#' List available packages
+#'
+#' @param packages packages to check dependency info for
+#' @param ... additional options to `available.packages`
+#' @return list of lists of packages with dependencies and versions
+#'
+#' @export
+available_dependencies = function(
+  packages,
+  repos = assure_repos(),
+  ...
+) {
+  ap = available.packages(...)
+  dependency_info = 
+    purrr::map(packages, ~ ap[.x, c('Depends', 'Imports')]) %>%
+    purrr::map( ~ stringr::str_replace_all(.x, '\n', '')) %>%
+    purrr::map( ~ stringr::str_split(.x, ',[ ]*')) %>%
+    purrr::map(purrr::flatten_chr)
+  dependencies = dependency_info %>%
+    purrr::map(stringr::str_split, pattern = ' ') %>%
+    purrr::map(purrr::map_chr,  ~ .x[1])
+ 
+  min_versions =
+    dependency_info %>%
+    purrr::map(stringr::str_split, pattern = ' ') %>%
+    purrr::map(purrr::map_chr,  ~ paste(.x[-1], collapse = ' ')) %>%
+    purrr::map(stringr::str_replace, pattern = '\\((.*)\\)', replacement = '\\1') %>%
+    purrr::map(stringr::str_replace, pattern = '[^0-9]*([0-9\\.]+)', replacement = '\\1')
+  o = purrr::map2(dependencies, min_versions, 
+    ~ purrr::map2(.x, .y, ~ list(package_name = .x, min_version = .y))) %>% str()
+  names(o) = packages
   return(o)
 }
 
@@ -107,10 +144,11 @@ old_packages = function(lib_path = assure_user_lib()[1], repos = assure_repos())
 update_packages = function(
   packages = old_packages(), 
   lib_path = assure_user_lib()[1],
-  repos = assure_repos()
+  repos = assure_repos(),
+  dependencies = c("Depends", "Imports")
 ) {
   old = old_packages(lib_path, repos)
-  install_packages(old, lib_path, repos)
+  install_packages(old, lib_path, repos, dependencies)
   return(old)
 }
    
@@ -145,7 +183,12 @@ assure_repos = function() {
 #' @return
 #'
 #' @export
-assure_package_installation = function(path = default_pkglist()) {
+assure_package_installation = function(
+  path = default_pkglist(),
+  lib = assure_user_lib()[1],
+  repos = assure_repos(),
+  dependencies = c("Depends", "Imports")
+) {
   options(stringsAsFactors=FALSE)
   
   installed_packages = rownames(utils::installed.packages())
@@ -153,12 +196,12 @@ assure_package_installation = function(path = default_pkglist()) {
   non_default_packages = setdiff(installed_packages, get_default_packages())
   
   problems = detect_load_problems(installed_packages)
-  repair_install = install_packages(problems)
+  repair_install = install_packages(problems, lib, repos, dependencies)
   
   installed_packages = rownames(utils::installed.packages())
   remaining_packages = setdiff(x=get_pkglist(path), y=installed_packages)
   if (length(remaining_packages) != 0) {
-    remaining_install = install_packages(remaining_packages)
+    remaining_install = install_packages(remaining_packages, lib, repos, dependencies)
   }
   remaining_packages = setdiff(x=get_pkglist(path), y=installed_packages)
   return(remaining_packages)

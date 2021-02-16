@@ -7,7 +7,8 @@
 install_packages(
   packages = get_pkglist(),
   lib = assure_user_lib()[1],
-  repos = assure_repos()
+  repos = assure_repos(),
+  dependencies = c("Depends", "Imports")
 )
 }
 \arguments{

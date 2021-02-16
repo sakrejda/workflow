@@ -64,5 +64,7 @@ data_dir = function(...) get_dir(name = "data", ...)
 config_dir = function(...) get_dir(name = "config", ...)
 
 
+#' @export
+cache_dir = function(...) get_dir(name = "cache", ...)
 
 
