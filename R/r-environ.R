@@ -157,6 +157,7 @@ set_environ = function(
   s = paste(s, collapse = "\n")
   cat(s, file = .Renviron, append = FALSE)
   readRenviron(.Renviron)
+  .libPaths(new = e_list$r_libs)
   return(e_list)
 }
 
