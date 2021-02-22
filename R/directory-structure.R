@@ -51,6 +51,9 @@ get_dir = function(..., name = NULL, strict = TRUE) {
   return(path)
 }
 
+#' @export 
+project_dir = function(...) get_dir(name = "project", ...)
+
 #' @export
 build_dir = function(...) get_dir(name = "build", ...)
 
