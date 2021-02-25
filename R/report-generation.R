@@ -12,21 +12,22 @@
 #' @return path to output document
 #'
 #' @export
-generate_document = function(path, ..., type = 'html') {
+generate_document = function(template, rel_output_path, ..., type = 'html') {
   param_list = list(...)
-  rel_path_base = fs::path_dir(path)
-  file_name = fs::path_file(path)
-  file_path = workflow::project_dir(path)
-  output_dir = workflow::artifact_dir(rel_path_base)
-  build_dir = workflow::build_dir(rel_path_base)
+  file_name = fs::path_file(template)
+  template_path = workflow::project_dir(template)
+  output_dir = workflow::artifact_dir(rel_output_path)
+  fs::dir_create(path = output_dir, recurse = TRUE)
+  build_dir = workflow::build_dir(rel_output_path)
+  fs::dir_create(path = build_dir, recurse = TRUE)
   rmarkdown::render(
-    input = file_path, 
+    input = template_path,
     output_dir = output_dir,
     intermediates_dir = build_dir, 
     knit_root_dir = build_dir,
     params = param_list
   )
-  out_path = workflow::artifact_dir(rel_path_base, fs::path_ext_set(file_name, type))
+  out_path = workflow::artifact_dir(rel_output_path, fs::path_ext_set(file_name, type))
   return(out_path)
 }
 

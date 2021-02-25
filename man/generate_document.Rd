@@ -4,14 +4,14 @@
 \alias{generate_document}
 \title{Render an rmarkdown doc (.Rmd)}
 \usage{
-generate_document(path, ..., type = "html")
+generate_document(template, rel_output_path, ..., type = "html")
 }
 \arguments{
-\item{path}{(relative to project root) to the .Rmd file}
-
 \item{...}{parameters to pass to the markdown document}
 
 \item{type}{file extension on the output (.html)}
+
+\item{path}{(relative to project root) to the .Rmd file}
 }
 \value{
 path to output document
