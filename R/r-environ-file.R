@@ -1,36 +1,11 @@
-
-#' Take a dotlist of expressions and evaluate them
+#' Format name/value pair for .Renviron file
 #'
-#' Evaluation environment can be set, it's a new child of the calling
-#' environment by default.
-#'
-#' @param ... dotlist of expressions
-#' @param .env evaluation environment
-#' @return list of values created in the enviornment
+#' @param name .Renviron variable name
+#' @param var .Renviron variable value
+#' @return formatted string
 #'
 #' @export
-eval_env = function(
-  ..., 
-  .env = rlang::new_environment(parent = rlang::caller_env())
-) {
-  exprs = rlang::enexprs(...)
-  expr_names = names(exprs)
-  for (i in seq_along(exprs)) {
-    name = expr_names[i]
-    value = try(rlang::eval_tidy(expr = exprs[[i]], data = rlang::new_data_mask(.env), env = .env))
-    if ('try-error' %in% class(value)) {
-      rlang::abort(message = paste0(
-        "Building .Renviron failed at argument #", i, ": '", name, "', ",
-          "check 'value' using 'rlang::last_error'\n"),
-        class = 'failed-expression', value = value, name = name, environment = .env)
-    }
-    if (name != '') {
-      rlang::env_bind(.env = .env, !!name := value)
-    }
-  }
-  values = rlang::env_get_list(env = .env, nms = expr_names[expr_names != ''])
-  return(values)
-}
+e_string = function(name, var) paste0(name, '="', var, '"')
 
 #' Default environment values for the workflow
 #'
@@ -113,15 +88,6 @@ build_environ_list = function(
   }
   return(values)
 }
-
-#' Format name/value pair for .Renviron file
-#'
-#' @param name .Renviron variable name
-#' @param var .Renviron variable value
-#' @return formatted string
-#'
-#' @export
-e_string = function(name, var) paste0(name, '="', var, '"')
 
 #' Write list of values to .Renviron file in correct format
 #'

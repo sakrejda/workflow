@@ -13,6 +13,7 @@ msg = list(
   `resource-dir-var-empty` = "The variable holding the resource directory location is missing but needed.",
   `resource-not-found` = "Resource not found, using temporary directory instead.",
   `resource-not-found-error` = "Resource not found, stoping.",
+  `path-is-unknown` = "A path can not be unknown.",
   `path-is-null` = "A path can not contain the NULL value.",
   `path-is-empty` = "A path can not be the empty string.",
   `path-is-vector` = "A path can not be a vector.",
