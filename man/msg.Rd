@@ -5,7 +5,7 @@
 \alias{msg}
 \title{List of messages returned by the package}
 \format{
-An object of class \code{list} of length 14.
+An object of class \code{list} of length 15.
 }
 \usage{
 msg

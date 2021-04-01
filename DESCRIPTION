@@ -10,7 +10,7 @@ Authors@R:
 Description: Encodes things you don't want to remember to do into hopefully readable code while avoiding a completely generic approach
 License: GPL-3
 Imports:
-    rlang, purrr, remotes
+    rlang, purrr, remotes, fs, stringr, curl, rmarkdown, parallel, utils, rappdirs
 Suggests: 
     testthat
 Encoding: UTF-8
