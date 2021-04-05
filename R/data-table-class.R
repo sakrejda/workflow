@@ -184,8 +184,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
       private$.local_dir = fs::path(data_dir, rpath) %>% fs::path_dir()
       local_rds_file = private$.local_path %>%
-        fs::path_file() %>%
-        fs::path_ext_set(private$.local_path, 'rds')
+        fs::path_file() %>% fs::path_ext_set('rds')
       private$.local_rds_path = fs::path(private$.build_dir, local_rds_file)
       private$.data_dir = data_dir
     },
