@@ -30,8 +30,9 @@ resource_dir = function(name, path, ...) {
       stop(msg[['resource-dir-is-not-dir']])
     }
   } else {
-    fs::dir_create(path = fs::path_dir(path), recurse = TRUE)
-    if (!fs::is_dir(path)) {
+    path_dir = fs::path_dir(path)
+    fs::dir_create(path = path_dir, recurse = TRUE)
+    if (!fs::is_dir(path_dir)) {
       stop(msg[['resource-dir-creation-failed']])
     }
   }
