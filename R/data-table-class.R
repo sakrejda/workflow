@@ -26,6 +26,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.retrieve = rlang::enquo(retrieve)
       private$.load = rlang::enquo(load)
       private$.update_artifact_dir(.artifact_dir)
+      private$.update_build_dir(.build_dir)
       private$.update_cached_file()
       private$.load_cached()
       private$.colnames = colnames(private$.data)
