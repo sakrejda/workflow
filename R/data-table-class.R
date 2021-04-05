@@ -49,7 +49,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       return(self)
     },
     process_definitions = function() {
-      private$.definitions = cascade_definitions(private$.definitions)
+      private$.definitions = combine_definitions(private$.definitions)
       private$.apply_definitions()  
       self$clear_definitions()
       return(self)
