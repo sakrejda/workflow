@@ -60,7 +60,6 @@ DataTable = R6::R6Class(classname = "DataTable",
     process_definitions = function() {
       private$.definitions = combine_definitions(private$.definitions)
       private$.apply_definitions()  
-      self$clear_definitions()
       return(self)
     },
     attributes = function(k,v) {
@@ -110,7 +109,7 @@ DataTable = R6::R6Class(classname = "DataTable",
         }
         name = private$.definitions[[i]]$name
         standard_name = private$.definitions[[i]]$standard_name
-        if (!is.na(standard_name) && name != standard_name) {
+        if (!is.na(standard_name) && (name != standard_name)) {
           private$.logger("For file '{file_name}', renaming: {current} --> {standard}",
             file_name = private$.file_name, current = name, standard = standard_name)
           if (name %in% private$.colnames) {
@@ -155,9 +154,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     },
     .load_cached = function(...) {
       private$.logger("Loading file from: {local_path}", local_path = private$.local_path)
-      local_data = c(list( 
-        .source_path = private$.source_path,
-        .local_path = private$.local_path), list(...))
+      local_data = c(list(.local_path = private$.local_path), list(...))
       private$.data = try(rlang::eval_tidy(expr = private$.load, data = local_data))
       if ('try-error' %in% class(private$.data)) {
         message = glue::glue("failed to load remote file ",
@@ -186,7 +183,10 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.local_path = fs::path(data_dir, rpath)
       private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
       private$.local_dir = fs::path(data_dir, rpath) %>% fs::path_dir()
-      private$.local_rds_path = fs::path_ext_set(private$.local_path, 'rds')
+      local_rds_file = private$.local_path %>%
+        fs::path_file() %>%
+        fs::path_ext_set(private$.local_path, 'rds')
+      private$.local_rds_path = fs::path(private$.build_dir, local_rds_file)
       private$.data_dir = data_dir
     },
     .update_artifact_dir = function(path) {
