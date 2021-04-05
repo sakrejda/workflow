@@ -2,14 +2,12 @@
 % Please edit documentation in R/data-table-class.R
 \name{DataTable}
 \alias{DataTable}
-\title{FIXME: definitions should be viewable in their aggregate effect, not just
-returned as an object}
+\title{A class representing a table of data based on a (remote?) file}
 \description{
-FIXME: definitions should be viewable in their aggregate effect, not just
-returned as an object
+Data...
 
 FIXME: definitions should be viewable in their aggregate effect, not just
-returned as an object
+returned as an object.  Exported but probably used through helper functions.
 }
 \section{Methods}{
 \subsection{Public methods}{

@@ -1,4 +1,14 @@
 
+#' A class representing metadata about a single column
+#'
+#' @description
+#' Describes column contents
+#'
+#' @details
+#' It's metadata
+#'
+#' @exportClass
+#' @export
 ColumnMetadata = R6::R6Class(classname = "ColumnMetadata",
   public = list(
     initialize = function(
