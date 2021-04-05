@@ -30,9 +30,8 @@ resource_dir = function(name, path, ...) {
       stop(msg[['resource-dir-is-not-dir']])
     }
   } else {
-    path_dir = fs::path_dir(path)
-    fs::dir_create(path = path_dir, recurse = TRUE)
-    if (!fs::is_dir(path_dir)) {
+    fs::dir_create(path = path, recurse = TRUE)
+    if (!fs::is_dir(path)) {
       stop(msg[['resource-dir-creation-failed']])
     }
   }
@@ -78,7 +77,7 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
   if (is.null(.name)) {
     stop(msg[['resource-missing-name']])
   }
-  path = try(resource(name = .name, ..., .strict = .strict))
+  path = try(resource(name = .name, ...))
   if ('try-error' %in% class(path)) {
     if (isTRUE(.strict)) {
       stop(msg[['resource-not-found-error']])
@@ -95,18 +94,100 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
 project_dir = function(...) get_dir(.name = "project", ...)
 
 #' @export
+project_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(project_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
+
+#' @export
 build_dir = function(...) get_dir(.name = "build", ...)
+
+#' @export
+build_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(build_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
 
 #' @export
 artifact_dir = function(...) get_dir(.name = "artifact", ...)
 
 #' @export
+artifact_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(artifact_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
+
+#' @export
 data_dir = function(...) get_dir(.name = "data", ...)
 
+#' @export
+data_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(data_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
 #' @export
 config_dir = function(...) get_dir(.name = "config", ...)
 
 #' @export
+config_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(config_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
+
+#' @export
 cache_dir = function(...) get_dir(.name = "cache", ...)
 
+#' @export
+cache_file = function(..., .file) {
+  dots = list(...)
+  if (missing(.file)) {
+    m = length(dots)
+    .file = dots[[m]]
+    dots = dots[-m]
+  }
+  dir = purrr::lift_dl(cache_dir)(dots)
+  path = fs::path(dir, .file)
+  fs::file_create(path = path)
+  return(path)
+}
 
