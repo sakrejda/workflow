@@ -35,7 +35,6 @@ resource_dir = function(name, path, ...) {
       stop(msg[['resource-dir-creation-failed']])
     }
   }
-  set_env(name, path)
   return(path)
 }
 
@@ -53,15 +52,14 @@ resource_dir = function(name, path, ...) {
 #' @export
 resource = function(name, ..., .root = NULL) {
   var = default_dir_var(name)
-  val = get_env(var)
-  if (is.null(val) || val == "") { # $VAR is not defined
+  path = get_env(var)
+  if (is.null(path) || path == "") { # $VAR is not defined
+    if (is.null(.root)) {
       stop(msg[['resource-dir-var-empty']])
-  }
-  if (is.null(.root)) {
-    path = val # using found path
-  } else {
-    path = .root
-    set_env(var, path)
+    } else {
+      path = .root
+      set_env(var, path)
+    }
   }
   path = resource_dir(name = var, path = path, ...)
   return(path)
@@ -79,13 +77,14 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
   if (is.null(.name)) {
     stop(msg[['resource-missing-name']])
   }
-  path = try(resource(name = .name, ...))
+  path = try(resource(name = .name, ..., .strict = .strict))
   if ('try-error' %in% class(path)) {
     if (isTRUE(.strict)) {
       stop(msg[['resource-not-found-error']])
     } else {
       root = fs::path_temp(.name, ...)
       warning(msg[['resource-not-found']])
+
     }
   }
   return(path)
