@@ -9,7 +9,7 @@
 #' FIXME: definitions should be viewable in their aggregate effect, not just
 #' returned as an object.  Exported but probably used through helper functions.
 #'
-#' @exportClass
+#' @exportClass DataTable
 #' @export
 DataTable = R6::R6Class(classname = "DataTable", 
   public = list(

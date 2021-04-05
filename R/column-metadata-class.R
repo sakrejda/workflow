@@ -7,7 +7,7 @@
 #' @details
 #' It's metadata
 #'
-#' @exportClass
+#' @exportClass ColumnMetadata
 #' @export
 ColumnMetadata = R6::R6Class(classname = "ColumnMetadata",
   public = list(
