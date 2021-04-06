@@ -54,7 +54,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     },
     rename = function(...) {
       text = rlang::enquos(...) %>% purrr::map(rlang::quo_text) %>%
-        purrr::imap(~ list(name = .y, standard_name = .x))
+        purrr::imap(~ list(name = .x, standard_name = .y))
       purrr::lift_dl(self$define)(text)
       return(self)
     },
