@@ -169,6 +169,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .save_local = function() {
       from = private$.source_path
       to = private$.local_rds_path
+      to %>% fs::path_dir() %>% fs::dir_create()
       private$.logger("saving processed file from '{from}' to '{to}'.", from = from, to = to)
       if (nrow(private$.data) == 0) {
         msg = glue::glue("no data to save to '{to}'.", to = to)
