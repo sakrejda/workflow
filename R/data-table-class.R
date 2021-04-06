@@ -104,6 +104,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .attributes = list(),
     .applied = integer(),
     .apply_definitions = function() {
+      original_colnames = private$.colnames
       for (i in seq_along(private$.definitions)) {
         if (i %in% private$.applied) {
           next
@@ -132,7 +133,11 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
       private$.logger("For file '{file_name}', all definitions applied.", 
         file_name = private$.file_name)
-      private$.save_local()
+      if (original_colnames != private$.colnames) {
+        private$.load_local()
+        colnames(private$.data) = private$.colnames
+        private$.save_local()
+      }
     },
     .insert_definition = function(x) {
       if (!(x$name %in% private$.colnames)) {
