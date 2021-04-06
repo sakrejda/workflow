@@ -22,7 +22,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       .build_dir = workflow::build_dir(),
       .artifact_dir = workflow::artifact_dir()
     ) {
-      private$.update_path(uri, rpath, .data_dir)
+      private$.update_path(uri, rpath, .data_dir, .build_dir)
       private$.retrieve = rlang::enquo(retrieve)
       private$.load = rlang::enquo(load)
       private$.update_artifact_dir(.artifact_dir)
@@ -174,7 +174,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.logger("processed file from '{from}' saved to '{to}'.", from = from, to = to)
       return(to)
     },
-    .update_path = function(uri, rpath, data_dir) {
+    .update_path = function(uri, rpath, data_dir, build_dir) {
       private$.uri = uri
       private$.rpath = rpath
       private$.source_path = fs::path(uri, rpath) 
@@ -186,7 +186,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.local_dir = fs::path(data_dir, rpath) %>% fs::path_dir()
       local_rds_file = fs::path_file(rpath) %>% fs::path_ext_set('rds')
       local_rds_dir = fs::path_dir(rpath)
-      private$.local_rds_path = fs::path(private$.build_dir, local_rds_dir, local_rds_file)
+      private$.local_rds_path = fs::path(build_dir, local_rds_dir, local_rds_file)
       private$.data_dir = data_dir
     },
     .update_artifact_dir = function(path) {
