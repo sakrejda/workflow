@@ -23,10 +23,10 @@ DataTable = R6::R6Class(classname = "DataTable",
       .artifact_dir = workflow::artifact_dir()
     ) {
       private$.update_path(uri, rpath, .data_dir, .build_dir)
-      private$.retrieve = rlang::enquo(retrieve)
-      private$.load = rlang::enquo(load)
       private$.update_artifact_dir(.artifact_dir)
       private$.update_build_dir(.build_dir)
+      private$.retrieve = rlang::enquo(retrieve)
+      private$.load = rlang::enquo(load)
       private$.update_cached_file()
       private$.load_cached()
       private$.colnames = colnames(private$.data)
@@ -170,6 +170,11 @@ DataTable = R6::R6Class(classname = "DataTable",
       from = private$.source_path
       to = private$.local_rds_path
       private$.logger("saving processed file from '{from}' to '{to}'.", from = from, to = to)
+      if (nrow(private$.data) == 0) {
+        msg = glue::glue("no data to save to '{to}'.", to = to)
+        private$.logger(msg)
+        rlang::abort(msg)
+      }
       saveRDS(private$.data, file = to)
       private$.logger("processed file from '{from}' saved to '{to}'.", from = from, to = to)
       return(to)
@@ -188,6 +193,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       local_rds_dir = fs::path_dir(rpath)
       private$.local_rds_path = fs::path(build_dir, local_rds_dir, local_rds_file)
       private$.data_dir = data_dir
+      private$.build_dir = build_dir
     },
     .update_artifact_dir = function(path) {
       private$.artifact_dir = path
