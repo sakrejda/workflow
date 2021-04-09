@@ -15,7 +15,7 @@
 generate_document = function(template, rel_output_path, ..., type = 'html') {
   param_list = list(...)
   file_name = fs::path_file(template)
-  template_path = workflow::project_dir(template)
+  template_path = workflow::project_file(template)
   output_dir = workflow::artifact_dir(rel_output_path)
   fs::dir_create(path = output_dir, recurse = TRUE)
   build_dir = workflow::build_dir(rel_output_path)
