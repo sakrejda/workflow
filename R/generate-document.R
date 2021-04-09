@@ -27,7 +27,7 @@ generate_document = function(template, rel_output_path, ..., type = 'html') {
     knit_root_dir = build_dir,
     params = param_list
   )
-  out_path = workflow::artifact_dir(rel_output_path, fs::path_ext_set(file_name, type))
+  out_path = workflow::artifact_file(rel_output_path, fs::path_ext_set(file_name, type))
   return(out_path)
 }
 
