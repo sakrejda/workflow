@@ -90,123 +90,62 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
   return(path)
 }
 
-#' @export 
-project_dir = function(...) get_dir(.name = "project", ...)
-
 #' @export
-project_file = function(...) {
+get_file = function(..., .root_function) {
   dots = fs::path(...) %>%
     fs::path_split() %>% 
     purrr::map(purrr::lift_dl(fs::path)) %>%
     purrr::map(fs::path_tidy) %>%
     fs::path_split()
   m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(project_dir))
+  .file = purrr::map2(dots, m,  ~ .x[.y])
+  dots = purrr::map2(dots, m, ~ .x[-.y])
+  dir = purrr::map(dots, purrr::lift_dl(.root_function))
   path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
     purrr::flatten_chr()
   purrr::map(path, fs::file_create)
   return(path)
+
 }
+
+#' @export 
+project_dir = function(...) get_dir(.name = "project", ...)
+
+#' @export 
+project_file = function(...) get_file(..., .root_function = workflow::project_dir)
+
 
 #' @export
 build_dir = function(...) get_dir(.name = "build", ...)
 
-#' @export
-build_file = function(...) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
-    fs::path_split()
-  m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(build_dir))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
-    purrr::flatten_chr()
-  purrr::map(path, fs::file_create)
-  return(path)
-}
+#' @export 
+build_file = function(...) get_file(..., .root_function = workflow::build_dir)
+
 
 #' @export
 artifact_dir = function(...) get_dir(.name = "artifact", ...)
 
-#' @export
-artifact_file = function(...) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
-    fs::path_split()
-  m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(artifact_dir))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
-    purrr::flatten_chr()
-  purrr::map(path, fs::file_create)
-  return(path)
-}
+#' @export 
+artifact_file = function(...) get_file(..., .root_function = workflow::artifact_dir)
+
 
 #' @export
 data_dir = function(...) get_dir(.name = "data", ...)
 
 #' @export
-data_file = function(...) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
-    fs::path_split()
-  m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(data_dir))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
-    purrr::flatten_chr()
-  purrr::map(path, fs::file_create)
-  return(path)
-}
+data_file = function(...) get_file(..., .root_function = workflow::data_dir)
+
 
 #' @export
 config_dir = function(...) get_dir(.name = "config", ...)
 
 #' @export
-config_file = function(...) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
-    fs::path_split()
-  m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(config_dir))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
-    purrr::flatten_chr()
-  purrr::map(path, fs::file_create)
-  return(path)
-}
+config_file = function(...) get_file(..., .root_function = workflow::config_dir)
+
 
 #' @export
 cache_dir = function(...) get_dir(.name = "cache", ...)
 
 #' @export
-cache_file = function(...) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
-    fs::path_split()
-  m = purrr::map_int(dots, length)
-  .file = purrr::map(dots, ~ .x[m])
-  dots = purrr::map(dots, ~ .x[-m])
-  dir = purrr::map(dots, purrr::lift_dl(cache_dir))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
-    purrr::flatten_chr()
-  purrr::map(path, fs::file_create)
-  return(path)
-}
+cache_file = function(...) get_file(..., .root_function = workflow::cache_dir)
 
