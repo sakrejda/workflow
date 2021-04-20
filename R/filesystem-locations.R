@@ -94,16 +94,19 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
 project_dir = function(...) get_dir(.name = "project", ...)
 
 #' @export
-project_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(project_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+project_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(project_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
 
@@ -111,16 +114,19 @@ project_file = function(..., .file) {
 build_dir = function(...) get_dir(.name = "build", ...)
 
 #' @export
-build_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(build_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+build_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(build_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
 
@@ -128,16 +134,19 @@ build_file = function(..., .file) {
 artifact_dir = function(...) get_dir(.name = "artifact", ...)
 
 #' @export
-artifact_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(artifact_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+artifact_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(artifact_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
 
@@ -145,32 +154,39 @@ artifact_file = function(..., .file) {
 data_dir = function(...) get_dir(.name = "data", ...)
 
 #' @export
-data_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(data_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+data_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(data_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
+
 #' @export
 config_dir = function(...) get_dir(.name = "config", ...)
 
 #' @export
-config_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(config_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+config_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(config_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
 
@@ -178,16 +194,19 @@ config_file = function(..., .file) {
 cache_dir = function(...) get_dir(.name = "cache", ...)
 
 #' @export
-cache_file = function(..., .file) {
-  dots = list(...)
-  if (missing(.file)) {
-    m = length(dots)
-    .file = dots[[m]]
-    dots = dots[-m]
-  }
-  dir = purrr::lift_dl(cache_dir)(dots)
-  path = fs::path(dir, .file)
-  fs::file_create(path = path)
+cache_file = function(...) {
+  dots = fs::path(...) %>%
+    fs::path_split() %>% 
+    purrr::map(purrr::lift_dl(fs::path)) %>%
+    purrr::map(fs::path_tidy) %>%
+    fs::path_split()
+  m = purrr::map_int(dots, length)
+  .file = purrr::map(dots, ~ .x[m])
+  dots = purrr::map(dots, ~ .x[-m])
+  dir = purrr::map(dots, purrr::lift_dl(cache_dir))
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+    purrr::flatten_chr()
+  purrr::map(path, fs::file_create)
   return(path)
 }
 
