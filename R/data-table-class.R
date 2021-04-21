@@ -1,5 +1,7 @@
 
 
+simple_standardizer = function(s) s %>% tolower %>% stringr::str_replace_all('[ _]', '-')
+
 #' A class representing a table of data based on a (remote?) file
 #'
 #' @description
@@ -20,14 +22,15 @@ DataTable = R6::R6Class(classname = "DataTable",
       load = haven::read_sas(data_file = .local_path),
       .data_dir = workflow::data_dir(),
       .build_dir = workflow::build_dir(),
-      .artifact_dir = workflow::artifact_dir()
+      .artifact_dir = workflow::artifact_dir(),
+      ...
     ) {
       private$.update_path(uri, rpath, .data_dir, .build_dir)
       private$.update_artifact_dir(.artifact_dir)
       private$.update_build_dir(.build_dir)
       private$.retrieve = rlang::enquo(retrieve)
       private$.load = rlang::enquo(load)
-      private$.update_cached_file()
+      private$.update_cached_file(...)
       private$.load_cached()
       private$.colnames = colnames(private$.data)
       private$.save_local()
@@ -86,6 +89,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .definitions = list(),
     .retrieve = rlang::quo(),
     .load = rlang::quo(),
+    .path_standardizer = simple_standardizer,
     .data = tibble::tibble(),
     .colnames = character(),
     .uri = character(),
@@ -192,11 +196,12 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.file_name = fs::path_file(private$.source_path)
       private$.file_name_stub = fs::path_file(private$.source_path) %>% fs::path_ext_remove()
       private$.file_name_ext = fs::path_ext(private$.source_path)
-      private$.local_path = fs::path(data_dir, rpath)
+      local_rpath = private$.path_standardizer(rpath)
+      private$.local_path = fs::path(data_dir, local_rpath)
       private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
-      private$.local_dir = fs::path(data_dir, rpath) %>% fs::path_dir()
-      local_rds_file = fs::path_file(rpath) %>% fs::path_ext_set('rds')
-      local_rds_dir = fs::path_dir(rpath)
+      private$.local_dir = fs::path(data_dir, local_rpath)
+      local_rds_file = fs::path_file(local_rpath) %>% fs::path_ext_set('rds')
+      local_rds_dir = fs::path_dir(local_rpath)
       private$.local_rds_path = fs::path(build_dir, local_rds_dir, local_rds_file)
       private$.data_dir = data_dir
       private$.build_dir = build_dir
