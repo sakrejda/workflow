@@ -181,7 +181,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.logger("loading processed file from '{from}'.", from = from)
       if (fs::path_ext(from) == 'rds') {
         private$.data = readRDS(file = private$.local_binary_path)
-      } else if (fs::path_ex(from) == 'qs') {
+      } else if (fs::path_ext(from) == 'qs') {
         private$.data = qs::qread(from)
       }
     },
