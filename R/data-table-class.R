@@ -97,9 +97,9 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
       private$.load_local()
       if (to == 'qs') {
-        private$.local_binary_path = fs;:path_ext_set(private$.local_binary_path, 'qs')
+        private$.local_binary_path = fs::path_ext_set(private$.local_binary_path, 'qs')
       } else {
-        private$.local_binary_path = fs;:path_ext_set(private$.local_binary_path, 'rds')
+        private$.local_binary_path = fs::path_ext_set(private$.local_binary_path, 'rds')
       }
       private$.save_local()
     }
