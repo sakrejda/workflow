@@ -23,9 +23,10 @@ DataTable = R6::R6Class(classname = "DataTable",
       .data_dir = workflow::data_dir(),
       .build_dir = workflow::build_dir(),
       .artifact_dir = workflow::artifact_dir(),
+      .binary_format = 'qs',
       ...
     ) {
-      private$.update_path(uri, rpath, .data_dir, .build_dir)
+      private$.update_path(uri, rpath, .data_dir, .build_dir, .binary_format)
       private$.update_artifact_dir(.artifact_dir)
       private$.update_build_dir(.build_dir)
       private$.retrieve = rlang::enquo(retrieve)
@@ -61,6 +62,11 @@ DataTable = R6::R6Class(classname = "DataTable",
       purrr::lift_dl(self$define)(text)
       return(self)
     },
+    mutate = function(...) {
+      private$.load_local()
+      private$.data = private$.data %>% dplyr::mutate(...)
+      private$.save_local()
+    },
     process_definitions = function() {
       private$.definitions = combine_definitions(private$.definitions)
       private$.apply_definitions()  
@@ -83,6 +89,19 @@ DataTable = R6::R6Class(classname = "DataTable",
     clear_definitions = function() {
       private$.definitions = list()
       return(self)
+    },
+    switch_disk_format = function(to = 'qs') {
+      from = fs::path_ext(private$.local_binary_path)
+      if (to == from) {
+        return(TRUE)
+      }
+      private$.load_local()
+      if (to == 'qs') {
+        private$.local_binary_path = fs;:path_ext_set(private$.local_binary_path, 'qs')
+      } else {
+        private$.local_binary_path = fs;:path_ext_set(private$.local_binary_path, 'rds')
+      }
+      private$.save_local()
     }
   ),
   private = list(
@@ -100,7 +119,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .file_name_ext = character(),
     .local_dir = fs::path(),
     .local_path = fs::path(),
-    .local_rds_path = fs::path(),
+    .local_binary_path = fs::path(),
     .data_dir = character(),
     .artifact_dir = character(),
     .build_dir = character(),
@@ -158,9 +177,13 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
     },
     .load_local = function() {
-      from = private$.local_rds_path
+      from = private$.local_binary_path
       private$.logger("loading processed file from '{from}'.", from = from)
-      private$.data = readRDS(file = private$.local_rds_path)
+      if (fs::path_ext(from) == 'rds') {
+        private$.data = readRDS(file = private$.local_binary_path)
+      } else if (fs::path_ex(from) == 'qs') {
+        private$.data = qs::qread(from)
+      }
     },
     .load_cached = function(...) {
       private$.logger("Loading file from: {local_path}", local_path = private$.local_path)
@@ -177,7 +200,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     },
     .save_local = function() {
       from = private$.source_path
-      to = private$.local_rds_path
+      to = private$.local_binary_path
       to %>% fs::path_dir() %>% fs::dir_create()
       private$.logger("saving processed file from '{from}' to '{to}'.", from = from, to = to)
       if (nrow(private$.data) == 0) {
@@ -185,11 +208,16 @@ DataTable = R6::R6Class(classname = "DataTable",
         private$.logger(msg)
         rlang::abort(msg)
       }
-      saveRDS(private$.data, file = to)
+      if (fs::path_ext(to) == 'rds') {
+        saveRDS(private$.data, file = to)
+      } else if (fs::path_ext(to) == 'qs') {
+        qs::qsave(private$.data, file = to)
+      }
       private$.logger("processed file from '{from}' saved to '{to}'.", from = from, to = to)
+      private$.data = tibble::tibble()
       return(to)
     },
-    .update_path = function(uri, rpath, data_dir, build_dir) {
+    .update_path = function(uri, rpath, data_dir, build_dir, binary_format) {
       private$.uri = uri
       private$.rpath = rpath
       private$.source_path = fs::path(uri, rpath) 
@@ -200,9 +228,9 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.local_path = fs::path(data_dir, local_rpath)
       private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
       private$.local_dir = fs::path(data_dir, local_rpath)
-      local_rds_file = fs::path_file(local_rpath) %>% fs::path_ext_set('rds')
-      local_rds_dir = fs::path_dir(local_rpath)
-      private$.local_rds_path = fs::path(build_dir, local_rds_dir, local_rds_file)
+      local_binary_file = fs::path_file(local_rpath) %>% fs::path_ext_set(binary_format)
+      local_binary_dir = fs::path_dir(local_rpath)
+      private$.local_binary_path = fs::path(build_dir, local_binary_dir, local_binary_file)
       private$.data_dir = data_dir
       private$.build_dir = build_dir
     },
