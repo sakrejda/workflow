@@ -156,7 +156,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
       private$.logger("For file '{file_name}', all definitions applied.", 
         file_name = private$.file_name)
-      if (original_colnames != private$.colnames) {
+      if (any(original_colnames != private$.colnames)) {
         private$.load_local()
         colnames(private$.data) = private$.colnames
         private$.save_local()
