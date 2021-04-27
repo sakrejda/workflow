@@ -64,7 +64,11 @@ DataTable = R6::R6Class(classname = "DataTable",
     },
     mutate = function(...) {
       private$.load_local()
+      original_colnames = private$.colnames
       private$.data = private$.data %>% dplyr::mutate(...)
+      if (any(original_colnames != private$.colnames)) {
+        private$.colnames = colnames(private$.data)
+      }
       private$.save_local()
     },
     process_definitions = function() {
