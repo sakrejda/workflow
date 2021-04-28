@@ -36,6 +36,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.colnames = colnames(private$.data)
       private$.save_local()
       private$.data = tibble::tibble()
+      private$.dots = rlang::enquos(...)
     },
     contains = function(...) {
       symbols = rlang::enquos(...) %>% purrr::map(rlang::quo_text)
@@ -66,7 +67,10 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.load_local()
       original_colnames = private$.colnames
       private$.data = private$.data %>% dplyr::mutate(...)
-      if (any(original_colnames != private$.colnames)) {
+      new_colnames = colnames(private$.data)
+      if (length(original_colnames) != length(new_colnames) || 
+          !all(original_colnames %in% new_colnames) ||
+          !all(new_colnames %in% original_colnames)) {
         private$.colnames = colnames(private$.data)
       }
       private$.save_local()
@@ -124,6 +128,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .local_dir = fs::path(),
     .local_path = fs::path(),
     .local_binary_path = fs::path(),
+    .dots = list(),
     .data_dir = character(),
     .artifact_dir = character(),
     .build_dir = character(),
@@ -182,6 +187,9 @@ DataTable = R6::R6Class(classname = "DataTable",
     },
     .load_local = function() {
       from = private$.local_binary_path
+      if (!fs::file_exists(from)) {
+        private$.load_cached(!!!private$.dots)
+      }
       private$.logger("loading processed file from '{from}'.", from = from)
       if (fs::path_ext(from) == 'rds') {
         private$.data = readRDS(file = private$.local_binary_path)
@@ -190,6 +198,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
     },
     .load_cached = function(...) {
+      private$.update_cached_file(!!!private$.dots)
       private$.logger("Loading file from: {local_path}", local_path = private$.local_path)
       local_data = c(list(.local_path = private$.local_path), list(...))
       private$.data = try(rlang::eval_tidy(expr = private$.load, data = local_data))
