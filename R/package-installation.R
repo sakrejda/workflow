@@ -16,10 +16,10 @@ try_load_elsewhere = function(pkg) {
     o = try(require(package = p, character.only = TRUE))
     return(o)
   }, p = pkg))[[1]]
+  parallel::stopCluster(cl = cl)
   if (isTRUE(outcome)) {
     return(TRUE)
   }
-  parallel::stopCluster(cl = cl)
   return(FALSE)
 }
 
@@ -147,8 +147,9 @@ update_packages = function(
   repos = assure_repos(),
   dependencies = c("Depends", "Imports")
 ) {
-  old = old_packages(lib_path, repos)
-  install_packages(old, lib_path, repos, dependencies)
+  old_package_list = old_packages(lib_path, repos)
+  old_package_names = old_package_list[,'Packages']
+  install_packages(old_package_names, lib_path, repos, dependencies)
   return(old)
 }
    
