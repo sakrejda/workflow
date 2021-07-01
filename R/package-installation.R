@@ -150,7 +150,7 @@ update_packages = function(
   old_package_list = old_packages(lib_path, repos)
   old_package_names = old_package_list[,'Package']
   install_packages(old_package_names, lib_path, repos, dependencies)
-  return(old)
+  return(old_package_names)
 }
    
 #' Make sure the path to the user's location for R packages exists
