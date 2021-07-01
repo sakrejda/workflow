@@ -148,7 +148,7 @@ update_packages = function(
   dependencies = c("Depends", "Imports")
 ) {
   old_package_list = old_packages(lib_path, repos)
-  old_package_names = old_package_list[,'Packages']
+  old_package_names = old_package_list[,'Package']
   install_packages(old_package_names, lib_path, repos, dependencies)
   return(old)
 }
