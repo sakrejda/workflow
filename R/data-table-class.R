@@ -1,6 +1,7 @@
 
 
-simple_standardizer = function(s) s %>% tolower %>% stringr::str_replace_all('[ _]', '-')
+simple_standardizer = function(s) s %>% tolower %>% 
+  stringr::str_replace_all('[ _]', '-')
 
 #' A class representing a table of data based on a (remote?) file
 #'
@@ -18,7 +19,8 @@ DataTable = R6::R6Class(classname = "DataTable",
     initialize = function(
       uri,
       rpath,
-      retrieve = rdrop2::drop_download(path = .source_path, local_path = .local_path),
+      retrieve = rdrop2::drop_download(
+        path = .source_path, local_path = .local_path),
       load = haven::read_sas(data_file = .local_path),
       .data_dir = workflow::data_dir(),
       .build_dir = workflow::build_dir(),

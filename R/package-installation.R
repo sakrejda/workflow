@@ -89,8 +89,13 @@ install_packages = function(
   repos = assure_repos(),
   dependencies = c("Depends", "Imports")
 ) {
-  try(remotes::install_cran(pkgs = packages, lib = lib, 
-    repos = repos, dependencies = dependencies))
+  local({
+    r = options(repos)
+    options(repos = repos)
+    try(renv::install(packages = packages, library = lib,
+      prompt = FALSE))
+    options(repos = r)
+  })
   problems = detect_load_problems(packages)
   o = list(
     attempted = packages,
