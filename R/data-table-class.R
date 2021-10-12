@@ -70,13 +70,9 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.load_local()
       original_colnames = private$.colnames
       private$.data = private$.data %>% dplyr::mutate(...)
-      new_colnames = colnames(private$.data)
-      if (length(original_colnames) != length(new_colnames) ||
-          !all(original_colnames %in% new_colnames) ||
-          !all(new_colnames %in% original_colnames)) {
-        private$.colnames = colnames(private$.data)
-      }
+      private$.colnames = colnames(private$.data)
       private$.save_local()
+      return(self)
     },
     process_definitions = function() {
       private$.definitions = combine_definitions(private$.definitions)
