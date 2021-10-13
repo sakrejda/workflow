@@ -45,10 +45,25 @@ DataTable = R6::R6Class(classname = "DataTable",
       check = all(symbols %in% self$colnames) %>% isTRUE()
       return(check)
     },
+    correct = function(...) {
+      args = list(...)
+      cl = purrr::map_chr(args, class)
+      for (i in seq_along(args)) {
+        if (cl[i] == 'list-of-corrections') {
+          purrr::lift_dl(self$correct)(args[[i]])
+        } else if (cl[i] == 'single-fix') {
+          private$.insert_correction(args[[i]])
+        } else {
+          msg = glue::glue("Submitted correction must be wrapped.")
+          rlang::abort(message = msg, faulty_correction = args[[i]])
+        }
+      }
+      return(self)
+    },
     define = function(...) {
       args = list(...)
       names = names(args)
-      args_column_metadata = args %>% 
+      args_column_metadata = args %>%
         purrr::keep(~ isTRUE("ColumnMetadata" %in% class(.x)))
       args_other = args %>% 
         purrr::keep(~ !isTRUE("ColumnMetadata" %in% class(.x))) %>%
@@ -74,6 +89,10 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.data = data
       private$.colnames = colnames(data)
       private$.save_local()
+      return(self)
+    },
+    process_corrections = function() {
+      private$.apply_corrections()
       return(self)
     },
     process_definitions = function() {
@@ -118,6 +137,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     }
   ),
   private = list(
+    .corrections = list(),
     .definitions = list(),
     .retrieve = rlang::quo(),
     .load = rlang::quo(),
@@ -140,6 +160,20 @@ DataTable = R6::R6Class(classname = "DataTable",
     .logger = function(...) logger::log_info(...),
     .attributes = list(),
     .applied = integer(),
+    .apply_corrections = function() {
+      for (fix in private$.corrections) {
+        record_idx = which(private$.data == fix$record_id)
+        current_val_check = data[record_idx, fix$column] == fix$current
+        if (!current_val_check) {
+          msg = glue::glue("Skipping fix: for record '{fix$record_id}' in ",
+            "column '{fix$column}' as it does not contain the value ",
+            "'{fix$current}'.")
+          rlang::warn(msg)
+        } else {
+          data[record_idx, fix$column] = fix$new
+        }
+      }
+    },
     .apply_definitions = function() {
       original_colnames = private$.colnames
       for (i in seq_along(private$.definitions)) {
@@ -197,6 +231,23 @@ DataTable = R6::R6Class(classname = "DataTable",
           file_name = private$.file_name, 
           name = x$name, standard_name = x$standard_name)
       }
+    },
+    .insert_correction = function(x) {
+      if (!(x$column %in% private$.colnames)) {
+        private$.logger("Name '{name}' is not contained",
+          " in the current data.", name = x$column)
+      }
+      if (!(x$record_id %in% private$.data$record_id)) {
+        private$.logger("Record '{record_id}' is not contained",
+          " in the current data.", record_id = x$record_id)
+      }
+      n = length(private$.corrections)
+      private$.corrections[[n+1]] = x
+      private$.logger("For file '{file_name}', ",
+          "inserted definition for column '{column}' ",
+          "in record '{record_id}'.",
+          file_name = private$.file_name, column = x$column,
+          record_id = x$record_id)
     },
     .load_local = function() {
       from = private$.local_binary_path
