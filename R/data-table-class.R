@@ -174,7 +174,7 @@ DataTable = R6::R6Class(classname = "DataTable",
             "'{fix$current}'.")
           rlang::warn(msg)
         } else {
-          data[record_idx, fix$column] = fix$new
+          private$.data[record_idx, fix$column] = fix$new
         }
       }
       private$.save_local()
