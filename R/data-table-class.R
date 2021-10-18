@@ -238,6 +238,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
     },
     .insert_correction = function(x) {
+      private$.load_local()
       if (!(x$column %in% private$.colnames)) {
         private$.logger("Name '{name}' is not contained",
           " in the current data.", name = x$column)
@@ -253,6 +254,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           "in record '{record_id}'.",
           file_name = private$.file_name, column = x$column,
           record_id = x$record_id)
+      private$.save_local()
     },
     .load_local = function() {
       from = private$.local_binary_path
