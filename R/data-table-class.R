@@ -161,8 +161,12 @@ DataTable = R6::R6Class(classname = "DataTable",
     .attributes = list(),
     .applied = integer(),
     .apply_corrections = function() {
+      private$.load_local()
       for (fix in private$.corrections) {
         record_idx = which(private$.data == fix$record_id)
+        if (length(record_idx) == 0) {
+          msg = glue::glue("Skipping fix: record '{fix$record_id}' is missing.")
+        }
         current_val_check = data[record_idx, fix$column] == fix$current
         if (!current_val_check) {
           msg = glue::glue("Skipping fix: for record '{fix$record_id}' in ",
@@ -173,6 +177,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           data[record_idx, fix$column] = fix$new
         }
       }
+      private$.save_local()
     },
     .apply_definitions = function() {
       original_colnames = private$.colnames
