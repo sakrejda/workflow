@@ -164,11 +164,11 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.load_local()
       for (fix in private$.corrections) {
         record_idx = which(private$.data$record_id == fix$record_id)
-        if (length(record_idx) == 0) {
+        if (!isTRUE(length(record_idx) > 0)) {
           msg = glue::glue("Skipping fix: record '{fix$record_id}' is missing.")
         }
-        current_val_check = data[record_idx, fix$column] == fix$current
-        if (!current_val_check) {
+        current_val_check = private$.data[record_idx, fix$column] == fix$current
+        if (!isTRUE(current_val_check)) {
           msg = glue::glue("Skipping fix: for record '{fix$record_id}' in ",
             "column '{fix$column}' as it does not contain the value ",
             "'{fix$current}'.")
