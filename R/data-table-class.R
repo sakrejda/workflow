@@ -163,7 +163,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .apply_corrections = function() {
       private$.load_local()
       for (fix in private$.corrections) {
-        record_idx = which(private$.data == fix$record_id)
+        record_idx = which(private$.data$record_id == fix$record_id)
         if (length(record_idx) == 0) {
           msg = glue::glue("Skipping fix: record '{fix$record_id}' is missing.")
         }
