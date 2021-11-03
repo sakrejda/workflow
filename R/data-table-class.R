@@ -129,9 +129,13 @@ DataTable = R6::R6Class(classname = "DataTable",
       if (to == "qs") {
         private$.local_binary_path = fs::path_ext_set(
           private$.local_binary_path, "qs")
+        private$.local_binary_file = fs::path_ext_set(
+          private$.local_binary_file, "qs")
       } else {
         private$.local_binary_path = fs::path_ext_set(
           private$.local_binary_path, "rds")
+        private$.local_binary_file = fs::path_ext_set(
+          private$.local_binary_file, "rds")
       }
       private$.save_local()
     }
@@ -152,7 +156,10 @@ DataTable = R6::R6Class(classname = "DataTable",
     .file_name_ext = character(),
     .local_dir = fs::path(),
     .local_path = fs::path(),
+    .local_binary_dir = fs::path(),
+    .local_binary_file = fs::path(),
     .local_binary_path = fs::path(),
+    .local_binary_path_hash = character(),
     .dots = list(),
     .data_dir = character(),
     .artifact_dir = character(),
@@ -256,18 +263,6 @@ DataTable = R6::R6Class(classname = "DataTable",
           record_id = x$record_id)
       private$.save_local()
     },
-    .load_local = function() {
-      from = private$.local_binary_path
-      if (!fs::file_exists(from)) {
-        private$.load_cached(!!!private$.dots)
-      }
-      private$.logger("loading processed file from '{from}'.", from = from)
-      if (fs::path_ext(from) == "rds") {
-        private$.data = readRDS(file = private$.local_binary_path)
-      } else if (fs::path_ext(from) == "qs") {
-        private$.data = qs::qread(from)
-      }
-    },
     .load_cached = function(...) {
       private$.update_cached_file(!!!private$.dots)
       private$.logger("Loading file from: {local_path}", 
@@ -285,11 +280,53 @@ DataTable = R6::R6Class(classname = "DataTable",
       }
       return(private$.local_path)
     },
+    .load_local = function() {
+      current_hash = hash_df(private$.data)
+      recorded_hash = private$.local_binary_path_hash
+      if (isTRUE(current_hash == recorded_hash)) {
+        return(private$.local_binary_path)
+      }
+      private$.local_binary_path = fs::path(
+        private$.local_binary_dir, recorded_hash,
+        private$.local_binary_file)
+      from = private$.local_binary_path
+      if (!fs::file_exists(from)) {
+        private$.load_cached(!!!private$.dots)
+        recovered_hash = hash_df(private$.data)
+        if (recovered_hash != recorded_hash) {
+          msg = glue::glue("Data for this object could not be recovered.")
+          rlang::abort(msg, recorded_hash = recorded_hash)
+        }
+        return(private$.local_binary_path)
+      }
+      private$.logger("loading processed file from '{from}'.", from = from)
+      if (fs::path_ext(from) == "rds") {
+        private$.data = readRDS(file = from)
+      } else if (fs::path_ext(from) == "qs") {
+        private$.data = qs::qread(from)
+      } else {
+        rlang::abort("Unknown extension specified for cache file at save.")
+      }
+      recovered_hash = hash_df(private$.data)
+      if (isTRUE(recovered_hash == recorded_hash)) {
+        return(from)
+      }
+      msg = glue::glue("Cached data for this object is corrupted.")
+      rlang::abort(msg, recorded_hash = recorded_hash)
+    },
     .save_local = function() {
       from = private$.source_path
-      to = private$.local_binary_path
+      current_hash = private$.local_binary_path_hash
+      new_hash = hash_df(private$.data)
+      if (current_hash == new_hash) {
+        return(to)
+      }
+      private$.local_binary_path_hash = new_hash
+      to = fs::path(private$.local_binary_dir, new_hash,
+        private$.local_binary_file)
+      private$.local_binary_path = to
       to %>% fs::path_dir() %>% fs::dir_create()
-      private$.logger("saving processed file from '{from}' to '{to}'.", 
+      private$.logger("saving processed file from '{from}' to '{to}'.",
         from = from, to = to)
       if (nrow(private$.data) == 0) {
         msg = glue::glue("no data to save to '{to}'.", to = to)
@@ -300,8 +337,10 @@ DataTable = R6::R6Class(classname = "DataTable",
         saveRDS(private$.data, file = to)
       } else if (fs::path_ext(to) == "qs") {
         qs::qsave(private$.data, file = to)
+      } else {
+        rlang::abort("Unknown extension specified for cache file.")
       }
-      private$.logger("processed file from '{from}' saved to '{to}'.", 
+      private$.logger("processed file from '{from}' saved to '{to}'.",
         from = from, to = to)
       private$.data = tibble::tibble()
       return(to)
@@ -318,11 +357,14 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.local_path = fs::path(data_dir, local_rpath)
       private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
       private$.local_dir = fs::path(data_dir, local_rpath)
-      local_binary_file = fs::path_file(local_rpath) %>%
+      private$.local_binary_file = fs::path_file(local_rpath) %>%
         fs::path_ext_set(binary_format)
-      local_binary_dir = fs::path_dir(local_rpath)
+      local_rpath_dir = fs::path_dir(local_rpath)
+      private$.local_binary_dir = fs::path(
+        build_dir, local_rpath_dir)
       private$.local_binary_path = fs::path(
-        build_dir, local_binary_dir, local_binary_file)
+        private$.local_binary_dir,
+        private$.local_binary_file)
       private$.data_dir = data_dir
       private$.build_dir = build_dir
     },
