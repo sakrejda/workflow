@@ -318,12 +318,12 @@ DataTable = R6::R6Class(classname = "DataTable",
       from = private$.source_path
       current_hash = private$.local_binary_path_hash
       new_hash = hash_df(private$.data)
-      if (isTRUE(current_hash == new_hash)) {
-        return(to)
-      }
       private$.local_binary_path_hash = new_hash
       to = fs::path(private$.local_binary_dir, new_hash,
         private$.local_binary_file)
+      if (isTRUE(current_hash == new_hash)) {
+        return(to)
+      }
       private$.local_binary_path = to
       to %>% fs::path_dir() %>% fs::dir_create()
       private$.logger("saving processed file from '{from}' to '{to}'.",
