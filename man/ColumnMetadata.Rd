@@ -29,7 +29,9 @@ It's metadata
   definition = NA,
   standard_name = standardize_name(name),
   format = NA,
-  units = NA
+  units = NA,
+  values = NA,
+  original_name = NA
 )}\if{html}{\out{</div>}}
 }
 

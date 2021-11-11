@@ -314,6 +314,24 @@ DataTable = R6::R6Class(classname = "DataTable",
       msg = glue::glue("Cached data for this object is corrupted.")
       rlang::abort(msg, recorded_hash = recorded_hash)
     },
+    .recode_values = function() {
+      private$.load_local()
+      for (i in seq_along(private$.definitions)) {
+        if (i %in% private$.applied) {
+          col = private$.definitions[[i]]$standard_name
+        } else {
+          col = private$.definitions[[i]]$name
+        }
+        new = private$.data[[col]]
+        vals = private$.definitions[[i]]$values
+        for (j in seq_along(vals)) {
+          new[new == vals[j]] = names(vals)[j]
+        }
+        new[!(new %in% vals)] = NA
+        private$.data[[col]] = new
+      }
+      private$.save_local()
+    },
     .save_local = function() {
       from = private$.source_path
       current_hash = private$.local_binary_path_hash

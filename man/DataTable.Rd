@@ -14,11 +14,15 @@ returned as an object.  Exported but probably used through helper functions.
 \itemize{
 \item \href{#method-new}{\code{DataTable$new()}}
 \item \href{#method-contains}{\code{DataTable$contains()}}
+\item \href{#method-correct}{\code{DataTable$correct()}}
 \item \href{#method-define}{\code{DataTable$define()}}
 \item \href{#method-rename}{\code{DataTable$rename()}}
+\item \href{#method-mutate}{\code{DataTable$mutate()}}
+\item \href{#method-process_corrections}{\code{DataTable$process_corrections()}}
 \item \href{#method-process_definitions}{\code{DataTable$process_definitions()}}
 \item \href{#method-attributes}{\code{DataTable$attributes()}}
 \item \href{#method-clear_definitions}{\code{DataTable$clear_definitions()}}
+\item \href{#method-switch_disk_format}{\code{DataTable$switch_disk_format()}}
 \item \href{#method-clone}{\code{DataTable$clone()}}
 }
 }
@@ -34,7 +38,9 @@ returned as an object.  Exported but probably used through helper functions.
   load = haven::read_sas(data_file = .local_path),
   .data_dir = workflow::data_dir(),
   .build_dir = workflow::build_dir(),
-  .artifact_dir = workflow::artifact_dir()
+  .artifact_dir = workflow::artifact_dir(),
+  .binary_format = "qs",
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -45,6 +51,15 @@ returned as an object.  Exported but probably used through helper functions.
 \subsection{Method \code{contains()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$contains(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-correct"></a>}}
+\if{latex}{\out{\hypertarget{method-correct}{}}}
+\subsection{Method \code{correct()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$correct(...)}\if{html}{\out{</div>}}
 }
 
 }
@@ -63,6 +78,24 @@ returned as an object.  Exported but probably used through helper functions.
 \subsection{Method \code{rename()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$rename(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-mutate"></a>}}
+\if{latex}{\out{\hypertarget{method-mutate}{}}}
+\subsection{Method \code{mutate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$mutate(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-process_corrections"></a>}}
+\if{latex}{\out{\hypertarget{method-process_corrections}{}}}
+\subsection{Method \code{process_corrections()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$process_corrections()}\if{html}{\out{</div>}}
 }
 
 }
@@ -90,6 +123,15 @@ returned as an object.  Exported but probably used through helper functions.
 \subsection{Method \code{clear_definitions()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$clear_definitions()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-switch_disk_format"></a>}}
+\if{latex}{\out{\hypertarget{method-switch_disk_format}{}}}
+\subsection{Method \code{switch_disk_format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$switch_disk_format(to = "qs")}\if{html}{\out{</div>}}
 }
 
 }
