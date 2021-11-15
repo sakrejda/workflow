@@ -323,14 +323,31 @@ DataTable = R6::R6Class(classname = "DataTable",
           col = private$.definitions[[i]]$name
         }
         new = private$.data[[col]]
-        vals = private$.definitions[[i]]$values
-        if (is.null(vals)) {
+        if (is.null(new)) 
           next
+        vals = private$.definitions[[i]]$values
+        if (is.null(vals))
+          next
+
+        if (is.list(vals)) {
+          for (j in seq_along(vals)) {
+            if (is.null(names(vals)[j])) {
+              next
+            } else {
+              for (k in seq_along(vals[[j]])) {
+                new[new == vals[[j]][k]] = names(vals)[j]
+              }
+            }
+          }
+        } else {
+          for (j in seq_along(vals)) {
+            if (is.null(names(vals)[j])) {
+              next
+            } else {
+              new[new == vals[j]] = names(vals)[j]
+            }
+          }
         }
-        for (j in seq_along(vals)) {
-          new[new == vals[j]] = names(vals)[j]
-        }
-        new[!(new %in% vals)] = NA
         private$.data[[col]] = new
       }
       private$.save_local()

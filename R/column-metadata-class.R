@@ -115,7 +115,7 @@ ColumnMetadata = R6::R6Class(classname = "ColumnMetadata",
         return(self$merge(other, priority = 'self'))
       }
       rlang::abort(
-        "Definitions can not be merged for 'self' and 'other'.", "ColumnMetadataError", 
+        "Definitions can not be merged for 'self' and 'other'.", "ColumnMetadataError",
         self = self, other = other)
     },
     as_text = function() {
@@ -144,7 +144,7 @@ ColumnMetadata = R6::R6Class(classname = "ColumnMetadata",
     .original_name = character(),
     .format = character(),
     .units = character(),
-    .values = character()
+    .values = list()
   ),
   active = list(
     name = function(x) {
