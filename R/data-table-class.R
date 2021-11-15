@@ -324,6 +324,9 @@ DataTable = R6::R6Class(classname = "DataTable",
         }
         new = private$.data[[col]]
         vals = private$.definitions[[i]]$values
+        if (is.null(vals)) {
+          next
+        }
         for (j in seq_along(vals)) {
           new[new == vals[j]] = names(vals)[j]
         }
