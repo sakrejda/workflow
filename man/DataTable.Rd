@@ -12,23 +12,23 @@ returned as an object.  Exported but probably used through helper functions.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{DataTable$new()}}
-\item \href{#method-contains}{\code{DataTable$contains()}}
-\item \href{#method-correct}{\code{DataTable$correct()}}
-\item \href{#method-define}{\code{DataTable$define()}}
-\item \href{#method-rename}{\code{DataTable$rename()}}
-\item \href{#method-mutate}{\code{DataTable$mutate()}}
-\item \href{#method-process_corrections}{\code{DataTable$process_corrections()}}
-\item \href{#method-process_definitions}{\code{DataTable$process_definitions()}}
-\item \href{#method-attributes}{\code{DataTable$attributes()}}
-\item \href{#method-clear_definitions}{\code{DataTable$clear_definitions()}}
-\item \href{#method-switch_disk_format}{\code{DataTable$switch_disk_format()}}
-\item \href{#method-clone}{\code{DataTable$clone()}}
+\item \href{#method-DataTable-new}{\code{DataTable$new()}}
+\item \href{#method-DataTable-contains}{\code{DataTable$contains()}}
+\item \href{#method-DataTable-correct}{\code{DataTable$correct()}}
+\item \href{#method-DataTable-define}{\code{DataTable$define()}}
+\item \href{#method-DataTable-rename}{\code{DataTable$rename()}}
+\item \href{#method-DataTable-mutate}{\code{DataTable$mutate()}}
+\item \href{#method-DataTable-process_corrections}{\code{DataTable$process_corrections()}}
+\item \href{#method-DataTable-process_definitions}{\code{DataTable$process_definitions()}}
+\item \href{#method-DataTable-attributes}{\code{DataTable$attributes()}}
+\item \href{#method-DataTable-clear_definitions}{\code{DataTable$clear_definitions()}}
+\item \href{#method-DataTable-switch_disk_format}{\code{DataTable$switch_disk_format()}}
+\item \href{#method-DataTable-clone}{\code{DataTable$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-DataTable-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$new(
@@ -46,8 +46,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-contains"></a>}}
-\if{latex}{\out{\hypertarget{method-contains}{}}}
+\if{html}{\out{<a id="method-DataTable-contains"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-contains}{}}}
 \subsection{Method \code{contains()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$contains(...)}\if{html}{\out{</div>}}
@@ -55,8 +55,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-correct"></a>}}
-\if{latex}{\out{\hypertarget{method-correct}{}}}
+\if{html}{\out{<a id="method-DataTable-correct"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-correct}{}}}
 \subsection{Method \code{correct()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$correct(...)}\if{html}{\out{</div>}}
@@ -64,8 +64,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-define"></a>}}
-\if{latex}{\out{\hypertarget{method-define}{}}}
+\if{html}{\out{<a id="method-DataTable-define"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-define}{}}}
 \subsection{Method \code{define()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$define(...)}\if{html}{\out{</div>}}
@@ -73,8 +73,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-rename"></a>}}
-\if{latex}{\out{\hypertarget{method-rename}{}}}
+\if{html}{\out{<a id="method-DataTable-rename"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-rename}{}}}
 \subsection{Method \code{rename()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$rename(...)}\if{html}{\out{</div>}}
@@ -82,8 +82,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mutate"></a>}}
-\if{latex}{\out{\hypertarget{method-mutate}{}}}
+\if{html}{\out{<a id="method-DataTable-mutate"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-mutate}{}}}
 \subsection{Method \code{mutate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$mutate(...)}\if{html}{\out{</div>}}
@@ -91,8 +91,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-process_corrections"></a>}}
-\if{latex}{\out{\hypertarget{method-process_corrections}{}}}
+\if{html}{\out{<a id="method-DataTable-process_corrections"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-process_corrections}{}}}
 \subsection{Method \code{process_corrections()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$process_corrections()}\if{html}{\out{</div>}}
@@ -100,8 +100,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-process_definitions"></a>}}
-\if{latex}{\out{\hypertarget{method-process_definitions}{}}}
+\if{html}{\out{<a id="method-DataTable-process_definitions"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-process_definitions}{}}}
 \subsection{Method \code{process_definitions()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$process_definitions()}\if{html}{\out{</div>}}
@@ -109,8 +109,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-attributes"></a>}}
-\if{latex}{\out{\hypertarget{method-attributes}{}}}
+\if{html}{\out{<a id="method-DataTable-attributes"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-attributes}{}}}
 \subsection{Method \code{attributes()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$attributes(k, v)}\if{html}{\out{</div>}}
@@ -118,8 +118,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clear_definitions"></a>}}
-\if{latex}{\out{\hypertarget{method-clear_definitions}{}}}
+\if{html}{\out{<a id="method-DataTable-clear_definitions"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-clear_definitions}{}}}
 \subsection{Method \code{clear_definitions()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$clear_definitions()}\if{html}{\out{</div>}}
@@ -127,8 +127,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-switch_disk_format"></a>}}
-\if{latex}{\out{\hypertarget{method-switch_disk_format}{}}}
+\if{html}{\out{<a id="method-DataTable-switch_disk_format"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-switch_disk_format}{}}}
 \subsection{Method \code{switch_disk_format()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$switch_disk_format(to = "qs")}\if{html}{\out{</div>}}
@@ -136,8 +136,8 @@ returned as an object.  Exported but probably used through helper functions.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-DataTable-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

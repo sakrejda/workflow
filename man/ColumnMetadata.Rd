@@ -12,16 +12,16 @@ It's metadata
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ColumnMetadata$new()}}
-\item \href{#method-merge}{\code{ColumnMetadata$merge()}}
-\item \href{#method-as_text}{\code{ColumnMetadata$as_text()}}
-\item \href{#method-as_list}{\code{ColumnMetadata$as_list()}}
-\item \href{#method-clone}{\code{ColumnMetadata$clone()}}
+\item \href{#method-ColumnMetadata-new}{\code{ColumnMetadata$new()}}
+\item \href{#method-ColumnMetadata-merge}{\code{ColumnMetadata$merge()}}
+\item \href{#method-ColumnMetadata-as_text}{\code{ColumnMetadata$as_text()}}
+\item \href{#method-ColumnMetadata-as_list}{\code{ColumnMetadata$as_list()}}
+\item \href{#method-ColumnMetadata-clone}{\code{ColumnMetadata$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ColumnMetadata-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ColumnMetadata-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ColumnMetadata$new(
@@ -37,8 +37,8 @@ It's metadata
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-merge"></a>}}
-\if{latex}{\out{\hypertarget{method-merge}{}}}
+\if{html}{\out{<a id="method-ColumnMetadata-merge"></a>}}
+\if{latex}{\out{\hypertarget{method-ColumnMetadata-merge}{}}}
 \subsection{Method \code{merge()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ColumnMetadata$merge(other, priority = "self")}\if{html}{\out{</div>}}
@@ -46,8 +46,8 @@ It's metadata
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_text"></a>}}
-\if{latex}{\out{\hypertarget{method-as_text}{}}}
+\if{html}{\out{<a id="method-ColumnMetadata-as_text"></a>}}
+\if{latex}{\out{\hypertarget{method-ColumnMetadata-as_text}{}}}
 \subsection{Method \code{as_text()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ColumnMetadata$as_text()}\if{html}{\out{</div>}}
@@ -55,8 +55,8 @@ It's metadata
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_list"></a>}}
-\if{latex}{\out{\hypertarget{method-as_list}{}}}
+\if{html}{\out{<a id="method-ColumnMetadata-as_list"></a>}}
+\if{latex}{\out{\hypertarget{method-ColumnMetadata-as_list}{}}}
 \subsection{Method \code{as_list()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ColumnMetadata$as_list()}\if{html}{\out{</div>}}
@@ -64,8 +64,8 @@ It's metadata
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ColumnMetadata-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ColumnMetadata-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

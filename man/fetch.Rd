@@ -11,9 +11,6 @@ fetch(urls, paths)
 
 \item{paths}{paths to place files in}
 }
-\value{
-
-}
 \description{
 Fetch files from under a host and place files under a set of paths
 }

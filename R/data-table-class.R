@@ -1,7 +1,39 @@
 
 
-simple_standardizer = function(s) s %>% tolower %>% 
+simple_standardizer = function(s) s |> tolower() |> 
   stringr::str_replace_all("[ _]", "-")
+  
+fix = function(record_id, column, current, new) {
+  o = list(
+    record_id = record_id, 
+    column = column, 
+    current = current, 
+    new = new)
+  class(o) = 'single-fix'
+  return(o)
+}
+
+pattern_fix = function(column, pattern, replacement, f = stringr::str_replace) {
+  o = list(
+    column = column,
+    pattern = pattern,
+    replacement = replacement)
+  class(o) = 'pattern-fix'
+  return(o)
+}
+
+merge_fix = function(data) {
+  o = list(
+    data = data,
+    original_columns = data |>
+      dplyr::select(tidyselect::ends_with('__current')) |>
+      colnames()
+  )
+  colnames(o$data)[stringr::str_detect(colnames(o$data), '__current$')] = 
+    o$original_columns
+  class(o) = 'merge-fix'
+  return(o)
+}
 
 #' A class representing a table of data based on a (remote?) file
 #'
@@ -51,8 +83,41 @@ DataTable = R6::R6Class(classname = "DataTable",
       for (i in seq_along(args)) {
         if (cl[i] == 'list-of-corrections') {
           purrr::lift_dl(self$correct)(args[[i]])
+        } else if (cl[i] == 'pattern-fix') {
+          private$.load_local()
+          column = args[[i]]$column
+          record_id_idx = stringr::str_detect(private$.data[[column]], args[[i]]$pattern) |> which()
+          fixes = list(
+            record_id = private$.data$record_id[record_id_idx],
+            column = rep(column, length(record_id_idx)),
+            current = private$.data[[column]],
+            new = rep(args[[i]]$replacement, length(record_id_idx)))
+          fixes = purrr::pmap(fixes, list) |> purrr::map(`class<-`, 'single-fix')
+          purrr::lift_dl(self$correct)(fixes)
         } else if (cl[i] == 'single-fix') {
-          private$.insert_correction(args[[i]])
+          private$.load_local()
+          if (!(args[[i]]$column %in% private$.colnames)) {
+            private$.logger("Column '{name}' is not contained",
+                            " in the current data.", name = ars[[i]]$column)
+          }
+          if (!(args[[i]]$record_id %in% private$.data$record_id)) {
+            private$.logger("Record id '{record_id}' is not contained",
+                            " in the current data.", record_id = args[[i]]$record_id)
+          }
+          n = length(private$.corrections)
+          private$.corrections[[n+1]] = args[[i]]
+          private$.logger("For file '{file_name}', ",
+                          "inserted correction for column '{column}' ",
+                          "in record '{record_id}' from '{from}' to {to}.",
+                          file_name = private$.file_name, 
+                          column = args[[i]]$column,
+                          record_id = args[[i]]$record_id,
+                          from = args[[i]]$current, 
+                          to = args[[i]]$new)
+        } else if (cl[i] == 'merge-fix') {
+          n = length(private$.corrections)
+          private$.corrections[[n+1]] = args[[i]]
+          private$.logger("For file '{file_name}', inserted a 'merge-fix' table.")
         } else {
           msg = glue::glue("Submitted correction must be wrapped.")
           rlang::abort(message = msg, faulty_correction = args[[i]])
@@ -170,18 +235,54 @@ DataTable = R6::R6Class(classname = "DataTable",
     .apply_corrections = function() {
       private$.load_local()
       for (fix in private$.corrections) {
-        record_idx = which(private$.data$record_id == fix$record_id)
-        if (!isTRUE(length(record_idx) > 0)) {
-          msg = glue::glue("Skipping fix: record '{fix$record_id}' is missing.")
-        }
-        current_val_check = private$.data[record_idx, fix$column] == fix$current
-        if (!isTRUE(current_val_check)) {
-          msg = glue::glue("Skipping fix: for record '{fix$record_id}' in ",
-            "column '{fix$column}' as it does not contain the value ",
-            "'{fix$current}'.")
-          rlang::warn(msg)
-        } else {
-          private$.data[record_idx, fix$column] = fix$new
+        if (class(fix) == 'single-fix') {
+          record_idx = which(private$.data$record_id == fix$record_id)
+          if (!isTRUE(length(record_idx) > 0)) {
+            msg = glue::glue("Skipping fix: record '{fix$record_id}' is missing.")
+          }
+          current_val_check = private$.data[record_idx, fix$column] == fix$current
+          if (!isTRUE(current_val_check)) {
+            msg = glue::glue("Skipping fix: for record '{fix$record_id}' in ",
+              "column '{fix$column}' as it does not contain the value ",
+              "'{fix$current}'.")
+            rlang::warn(msg)
+          } else {
+            private$.data[record_idx, fix$column] = fix$new
+          }
+        } else if (class(fix) == 'merge-fix') {
+          pre_fix_colnames = colnames(private$.data)
+          pre_fix_nrow = nrow(private$.data)
+          current_col = fix$original_columns
+          new_col = paste0(current_col, '__new')
+          other_col = colnames(fix$data)[!(colnames(fix$data) %in% c(current_col, new_col))]
+          if (any(new_col %in% names(private$.data))) {
+            msg = glue::glue("Conflict: current data uses reserved suffix '__new'.")
+            rlang::abort(msg)
+          }
+          if (length(other_col) != 0) {
+            msg = glue::glue("Conflict: merge fix contains extraneous columns.")
+            rlang::abort(msg)
+          }
+          private$.data = private$.data |>
+            dplyr::left_join(y = fix$data, by = current_col)
+          match = private$.data |>
+            dplyr::select(tidyselect::matches(paste0('^', new_columns, '$'))) |>
+            purrr::map(c) |> purrr::map(is.na) |>
+            purrr::map(all) |> purrr::map(isFALSE) |>
+            purrr::flatten_lgl()
+          for (i in seq_along(current_col)) {
+            private$.data[match, current_col[i]] = private$.data[match, new_col[i]]
+          }
+          private$.data = private$.data |> 
+            dplyr::select(-tidyselect::matches(paste0('^', new_col, '$')))
+          if (colnames(private$.data) != pre_fix_colnames) {
+            msg = glue::glue("Conflict: merge fix changed final columns of data.")
+            rlang::abort(msg)
+          }
+          if (nrow(private$.data) != pre_fix_nrow) {
+            msg = glue::glue("Conflict: merge fix changed the number of data rows.")
+            rlang::abort(msg)
+          }
         }
       }
       private$.save_local()
@@ -243,25 +344,6 @@ DataTable = R6::R6Class(classname = "DataTable",
           file_name = private$.file_name, 
           name = x$name, standard_name = x$standard_name)
       }
-    },
-    .insert_correction = function(x) {
-      private$.load_local()
-      if (!(x$column %in% private$.colnames)) {
-        private$.logger("Name '{name}' is not contained",
-          " in the current data.", name = x$column)
-      }
-      if (!(x$record_id %in% private$.data$record_id)) {
-        private$.logger("Record '{record_id}' is not contained",
-          " in the current data.", record_id = x$record_id)
-      }
-      n = length(private$.corrections)
-      private$.corrections[[n+1]] = x
-      private$.logger("For file '{file_name}', ",
-          "inserted definition for column '{column}' ",
-          "in record '{record_id}'.",
-          file_name = private$.file_name, column = x$column,
-          record_id = x$record_id)
-      private$.save_local()
     },
     .load_cached = function(...) {
       private$.update_cached_file(!!!private$.dots)

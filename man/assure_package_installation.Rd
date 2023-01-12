@@ -14,9 +14,6 @@ assure_package_installation(
 \arguments{
 \item{path}{path to list of packages (one per line)}
 }
-\value{
-
-}
 \description{
 Maks sure the list of packages is installed
 }
