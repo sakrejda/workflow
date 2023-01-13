@@ -87,13 +87,15 @@ DataTable = R6::R6Class(classname = "DataTable",
           private$.load_local()
           column = args[[i]]$column
           record_id_idx = stringr::str_detect(private$.data[[column]], args[[i]]$pattern) |> which()
-          fixes = list(
-            record_id = private$.data$record_id[record_id_idx],
-            column = rep(column, length(record_id_idx)),
-            current = private$.data[[column]],
-            new = rep(args[[i]]$replacement, length(record_id_idx)))
-          fixes = purrr::pmap(fixes, list) |> purrr::map(`class<-`, 'single-fix')
-          purrr::lift_dl(self$correct)(fixes)
+          if (length(record_idx_idx) > 0) {
+            fixes = list(
+              record_id = private$.data$record_id[record_id_idx],
+              column = rep(column, length(record_id_idx)),
+              current = private$.data[[column]],
+              new = rep(args[[i]]$replacement, length(record_id_idx)))
+            fixes = purrr::pmap(fixes, list) |> purrr::map(`class<-`, 'single-fix')
+            purrr::lift_dl(self$correct)(fixes)
+          }
         } else if (cl[i] == 'single-fix') {
           private$.load_local()
           if (!(args[[i]]$column %in% private$.colnames)) {
@@ -536,10 +538,10 @@ DataTable = R6::R6Class(classname = "DataTable",
     source_file = function() private$.file_name,
     source_path = function() private$.source_path,
     definitions = function() private$.definitions,
-    print_definitions = function() private$.definitions %>%
+    print_definitions = function() private$.definitions |>
       purrr::map_chr(, ~ .x$as_text()),
-    definitions_table = function() private$.definitions %>%
-      purrr::map(, ~ .x$as_list()) %>%
+    definitions_table = function() private$.definitions |>
+      purrr::map(, ~ .x$as_list()) |>
       purrr::lift_dl(dplyr::bind_rows)(),
     artifact_dir = function() private$.artifact_dir,
     build_dir = function() private$.build_dir,
