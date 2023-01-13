@@ -87,7 +87,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           private$.load_local()
           column = args[[i]]$column
           record_id_idx = stringr::str_detect(private$.data[[column]], args[[i]]$pattern) |> which()
-          if (length(record_idx_idx) > 0) {
+          if (length(record_id_idx) > 0) {
             fixes = list(
               record_id = private$.data$record_id[record_id_idx],
               column = rep(column, length(record_id_idx)),
