@@ -91,7 +91,7 @@ DataTable = R6::R6Class(classname = "DataTable",
             fixes = list(
               record_id = private$.data$record_id[record_id_idx],
               column = rep(column, length(record_id_idx)),
-              current = private$.data[[column]],
+              current = private$.data[[column]][record_id_idx],
               new = rep(args[[i]]$replacement, length(record_id_idx)))
             fixes = purrr::pmap(fixes, list) |> purrr::map(`class<-`, 'single-fix')
             purrr::lift_dl(self$correct)(fixes)
