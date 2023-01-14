@@ -119,7 +119,8 @@ DataTable = R6::R6Class(classname = "DataTable",
         } else if (cl[i] == 'merge-fix') {
           n = length(private$.corrections)
           private$.corrections[[n+1]] = args[[i]]
-          private$.logger("For file '{file_name}', inserted a 'merge-fix' table.")
+          private$.logger("For file '{file_name}', inserted a 'merge-fix' table.", 
+            file_name = private$.file_name)
         } else {
           msg = glue::glue("Submitted correction must be wrapped.")
           rlang::abort(message = msg, faulty_correction = args[[i]])
