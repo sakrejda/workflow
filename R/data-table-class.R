@@ -269,7 +269,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           private$.data = private$.data |>
             dplyr::left_join(y = fix$data, by = current_col)
           match = private$.data |>
-            dplyr::select(tidyselect::matches(paste0('^', new_columns, '$'))) |>
+            dplyr::select(tidyselect::matches(paste0('^', new_col, '$'))) |>
             purrr::map(c) |> purrr::map(is.na) |>
             purrr::map(all) |> purrr::map(isFALSE) |>
             purrr::flatten_lgl()
