@@ -278,7 +278,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           }
           private$.data = private$.data |> 
             dplyr::select(-tidyselect::matches(paste0('^', new_col, '$')))
-          if (colnames(private$.data) != pre_fix_colnames) {
+          if (any(colnames(private$.data) != pre_fix_colnames)) {
             msg = glue::glue("Conflict: merge fix changed final columns of data.")
             rlang::abort(msg)
           }
