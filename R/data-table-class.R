@@ -235,6 +235,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     .logger = function(...) logger::log_info(...),
     .attributes = list(),
     .applied = integer(),
+    .corrected_records = character(),
     .apply_corrections = function() {
       private$.load_local()
       for (fix in private$.corrections) {
@@ -251,6 +252,7 @@ DataTable = R6::R6Class(classname = "DataTable",
             rlang::warn(msg)
           } else {
             private$.data[record_idx, fix$column] = fix$new
+            private$.corrected_records = c(private$.corrected_records, fix$record_id)
           }
         } else if (class(fix) == 'merge-fix') {
           pre_fix_colnames = colnames(private$.data)
@@ -276,6 +278,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           for (i in seq_along(current_col)) {
             private$.data[match, current_col[i]] = private$.data[match, new_col[i]]
           }
+          private$.corrected_records = c(private$.corrected_records, private$.data$record_id[match])
           private$.data = private$.data |> 
             dplyr::select(-tidyselect::matches(paste0('^', new_col, '$')))
           if (any(colnames(private$.data) != pre_fix_colnames)) {
