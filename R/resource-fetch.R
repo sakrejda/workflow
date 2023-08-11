@@ -41,7 +41,7 @@ fetch = function(urls, paths) {
 #' @export
 fetch_gadm = function(code, version = gadm_version(), host = gadm_url(), data_dir = data_dir()) {
   urls = gadm_gpkg_file_url(code, version, host)
-  paths = gadm_gpkg_file_path(code, version, host)
+  paths = gadm_gpkg_file_path(code, version, data_dir)
   fetch(urls, paths)
   files = find_files(path = data_dir, name = 'USA', extension = 'gpkg')
   return(files)
@@ -55,9 +55,10 @@ fetch_gadm = function(code, version = gadm_version(), host = gadm_url(), data_di
 #' @return list of downloaded files written successfully 
 #'
 #' @export
-fetch_uscb = function(code, version = uscb_version(), host = uscb_url(), data_dir = data_dir()) {
-  urls = uscb_gpkg_file_url(code, version, host)
-  paths = uscb_gpkg_file_path(code, version, host)
+fetch_uscb_block_gdb = function(code, version = uscb_version(), host = uscb_url(), data_dir = data_dir()) {
+  urls = uscb_block_file_url(code, version, host)
+  paths = uscb_block_file_path(code, version, data_dir)
+  fetch(urls, paths)
   files = find_files(path = data_dir, name = 'USA', extension = 'gpkg')
   return(files)
 }

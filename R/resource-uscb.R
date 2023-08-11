@@ -16,7 +16,7 @@ uscb_url = function(url = "https://www2.census.gov") return(url)
 #'
 #' @export
 uscb_path = function(
-  year = 2019,
+  year = 2022,
   format = 'gdb', 
   location = 'tiger'
 ) {
@@ -55,7 +55,7 @@ uscb_file = function(
   if (nchar(year) != 4) {
     stop("Require 4-digit year.")
   }
-  if (location  == "tiger") {
+  if (location  == "tiger" && area == "us") {
     stub = paste0('tlgdb_', year, "_a_", area, "_", type, ".", format, ".zip")
   } else {
     stop("USCB resource location unknown.")
@@ -100,6 +100,30 @@ uscb_block_relative_path = function(year = 2019, ...) {
   return(p)
 }
 
+#' USCB block gdb zip file full URL
+#'
+#' @return zip file URL
+#'
+#' @export
+uscb_block_file_url = function(
+  year = 2019,
+  ...
+  host = uscb_url()
+) {
+  full_url = url_path(host, uscb_block_relative_path(year, ...))
+  return(full_url)
+}
+
+uscb_block_file_path = function(
+  year = 2019,
+  ...,
+  data_dir = data_dir()
+) {
+  full_path = file.path(data_dir, uscb_block_relative_path(year, ...))
+  return(full_path)
+}
+
+
 #' Relative path to USCB block zip code spatial data
 #'
 #' @param year in four digits
@@ -114,27 +138,24 @@ uscb_zip_relative_path = function(year = 2019, ...) {
   return(p)
 }
 
-
-#' USCB block gdb zip file full URL
+#' USCB zip code gdb zip full file path
 #'
-#' @return zip file URL
+#' @return zip file full url
 #'
 #' @export
-uscb_block_file_url = function(
+uscb_zip_file_url = function(
   year = 2019,
   ...,
-  host = uscb_url()
+  data_dir = data_dir()
 ) {
-  full_url = url_path(host, uscb_block_relative_path(year, ...))
+  full_path = url_path(data_dir, uscb_zip_relative_path(year, ...))
   return(full_url)
 }
 
-#' USCB zip code gdb zip full file path
+#' USCB zip code gdb zip full local path
 #'
 #' @return zip file full path
-#'
-#' @export
-uscb_gpkg_file_path = function(
+uscb_zip_file_path = function(
   year = 2019,
   ...,
   data_dir = data_dir()
@@ -142,4 +163,3 @@ uscb_gpkg_file_path = function(
   full_path = file.path(data_dir, uscb_zip_relative_path(year, ...))
   return(full_path)
 }
-
