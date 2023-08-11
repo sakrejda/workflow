@@ -92,16 +92,16 @@ get_dir = function(..., .name = NULL, .strict = TRUE) {
 
 #' @export
 get_file = function(..., .root_function) {
-  dots = fs::path(...) %>%
-    fs::path_split() %>% 
-    purrr::map(purrr::lift_dl(fs::path)) %>%
-    purrr::map(fs::path_tidy) %>%
+  dots = fs::path(...) |>
+    fs::path_split() |>
+    purrr::map(purrr::lift_dl(fs::path)) |>
+    purrr::map(fs::path_tidy) |>
     fs::path_split()
   m = purrr::map_int(dots, length)
   .file = purrr::map2(dots, m,  ~ .x[.y])
   dots = purrr::map2(dots, m, ~ .x[-.y])
   dir = purrr::map(dots, purrr::lift_dl(.root_function))
-  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) %>%
+  path = purrr::map2(dir, .file, ~ fs::path(.x, .y)) |>
     purrr::flatten_chr()
   purrr::map(path, fs::file_create)
   return(path)

@@ -19,7 +19,7 @@ url_path = function(...) {
 #' @export
 fetch = function(urls, paths) {
   require(curl)
-  data_dirs = dirname(paths) %>% unique()
+  data_dirs = dirname(paths) |> unique()
   purrr::map(data_dirs, ~ dir.create(.x, showWarnings = FALSE, recursive = TRUE))
   complete = file.exists(paths)
   urls = urls[!complete]
@@ -42,6 +42,7 @@ fetch = function(urls, paths) {
 fetch_gadm = function(code, version = gadm_version(), host = gadm_url(), data_dir = data_dir()) {
   urls = gadm_gpkg_file_url(code, version, host)
   paths = gadm_gpkg_file_path(code, version, host)
+  fetch(urls, paths)
   files = find_files(path = data_dir, name = 'USA', extension = 'gpkg')
   return(files)
 }

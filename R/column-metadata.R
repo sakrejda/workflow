@@ -37,8 +37,8 @@ combine_definitions = function(x) {
   }
   cn = purrr::map_chr(x, ~ .x$name)
   sn = purrr::map_chr(x, ~ .x$standard_name)
-  combined = paste(cn, sn, sep = ' -> ') %>% duplicated() %>%
-    any() %>% isFALSE()
+  combined = paste(cn, sn, sep = ' -> ') |> duplicated() |>
+    any() |> isFALSE()
   if (combined) {
     return(x)
   }

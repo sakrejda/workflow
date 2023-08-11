@@ -73,8 +73,8 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.dots = rlang::enquos(...)
     },
     contains = function(...) {
-      symbols = rlang::enquos(...) %>% purrr::map(rlang::quo_text)
-      check = all(symbols %in% self$colnames) %>% isTRUE()
+      symbols = rlang::enquos(...) |> purrr::map(rlang::quo_text)
+      check = all(symbols %in% self$colnames) |> isTRUE()
       return(check)
     },
     correct = function(...) {
@@ -131,11 +131,11 @@ DataTable = R6::R6Class(classname = "DataTable",
     define = function(...) {
       args = list(...)
       names = names(args)
-      args_column_metadata = args %>%
+      args_column_metadata = args |>
         purrr::keep(~ isTRUE("ColumnMetadata" %in% class(.x)))
-      args_other = args %>% 
-        purrr::keep(~ !isTRUE("ColumnMetadata" %in% class(.x))) %>%
-        purrr::imap(~ {if (is.null(.x$name)) .x$name = .y; .x}) %>%
+      args_other = args |>
+        purrr::keep(~ !isTRUE("ColumnMetadata" %in% class(.x))) |>
+        purrr::imap(~ {if (is.null(.x$name)) .x$name = .y; .x}) |>
         purrr::map(make_column_definition)
       args = c(args_column_metadata, args_other)
       for (definition in args) {
@@ -144,7 +144,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       return(self)
     },
     rename = function(...) {
-      text = rlang::enquos(...) %>% purrr::map(rlang::quo_text) %>%
+      text = rlang::enquos(...) |> purrr::map(rlang::quo_text) |>
         purrr::imap(~ list(name = .x, standard_name = .y))
       purrr::lift_dl(self$define)(text)
       return(self)
@@ -308,8 +308,8 @@ DataTable = R6::R6Class(classname = "DataTable",
             standard = standard_name)
           if (name %in% private$.colnames) {
             col_mask = (self$.colnames == name)
-            private$.colnames = private$.colnames %>%
-              purrr::map_if(~ isTRUE(.x == name), ~ standard_name, ~ .x) %>%
+            private$.colnames = private$.colnames |>
+              purrr::map_if(~ isTRUE(.x == name), ~ standard_name, ~ .x) |>
               purrr::flatten_chr()
             private$.applied = c(private$.applied, i)
           } else {
@@ -451,7 +451,7 @@ DataTable = R6::R6Class(classname = "DataTable",
         return(to)
       }
       private$.local_binary_path = to
-      to %>% fs::path_dir() %>% fs::dir_create()
+      to |> fs::path_dir() |> fs::dir_create()
       private$.logger("saving processed file from '{from}' to '{to}'.",
         from = from, to = to)
       if (nrow(private$.data) == 0) {
@@ -476,14 +476,14 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.rpath = rpath
       private$.source_path = fs::path(uri, rpath)
       private$.file_name = fs::path_file(private$.source_path)
-      private$.file_name_stub = fs::path_file(private$.source_path) %>%
+      private$.file_name_stub = fs::path_file(private$.source_path) |>
         fs::path_ext_remove()
       private$.file_name_ext = fs::path_ext(private$.source_path)
       local_rpath = private$.path_standardizer(rpath)
       private$.local_path = fs::path(data_dir, local_rpath)
-      private$.local_path %>% fs::path_dir() %>% fs::dir_create(recurse = TRUE)
+      private$.local_path |> fs::path_dir() |> fs::dir_create(recurse = TRUE)
       private$.local_dir = fs::path(data_dir, local_rpath)
-      private$.local_binary_file = fs::path_file(local_rpath) %>%
+      private$.local_binary_file = fs::path_file(local_rpath) |>
         fs::path_ext_set(binary_format)
       local_rpath_dir = fs::path_dir(local_rpath)
       private$.local_binary_dir = fs::path(

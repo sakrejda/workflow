@@ -6,7 +6,7 @@
 #' @return url as string
 #'
 #' @export
-gadm_url = function(url = "https://biogeo.ucdavis.edu") return(url)
+gadm_url = function(url = "https://geodata.ucdavis.edu") return(url)
 
 #' Current GADM version
 #'
@@ -18,7 +18,7 @@ gadm_url = function(url = "https://biogeo.ucdavis.edu") return(url)
 #' @return gadm version in requested format
 #'
 #'   @export
-gadm_version = function(major = 3, minor = 6, type = 'dot') {
+gadm_version = function(major = 4, minor = 1, type = 'dot') {
   if (type == 'dot') {
     version = paste0(major, '.', minor)
   } else if (type == 'concatenate') {
@@ -40,7 +40,7 @@ gadm_version = function(major = 3, minor = 6, type = 'dot') {
 #'
 #' @export
 gadm_gpkg_path = function(version = gadm_version()) {
-  path = url_path("data/gadm", version, "/gpkg")
+  path = url_path("gadm", paste0("gadm", version), "gpkg")
   return(path)
 }
 
@@ -55,9 +55,12 @@ gadm_gpkg_zip = function(
   code = "USA",
   version = gadm_version(type = 'concatenate') 
 ) {
-  path = url_path("gadm", version, "_", code, "_gpkg.zip")
+  path = paste0("gadm", version, "_", code, ".gpkg")
   return(path)
 }
+
+#https://geodata.ucdavis.edu/gadm/gadm4.1/gpkg/gadm41_USA.gpkg
+
 
 #' GADM zip file relative path
 #'
@@ -71,6 +74,7 @@ gadm_gpkg_relative_path = function(
   version = gadm_version()
 ) {
   path = gadm_gpkg_path(version)
+  version = stringr::str_replace(version, '\\.', '')
   full_path = url_path(path, gadm_gpkg_zip(code, version))
   return(full_path)
 }
@@ -117,7 +121,7 @@ gadm_gpkg_file_path = function(
 #' @export
 is_gadm_file = function(path, type = 'gpkg', zipped = TRUE) {
   file_name = basename(paths)
-  pattern =  paste0('gadm[0-9][0-9]_[A-Z][A-Z][A-Z]_', type)
+  pattern =  paste0('gadm[0-9][0-9]_[A-Z][A-Z][A-Z]', type)
   if (zipped) {
     pattern = paste0(pattern, '.zip')
   }

@@ -119,22 +119,22 @@ available_dependencies = function(
 ) {
   ap = available.packages(...)
   dependency_info = 
-    purrr::map(packages, ~ ap[.x, c('Depends', 'Imports')]) %>%
-    purrr::map( ~ stringr::str_replace_all(.x, '\n', '')) %>%
-    purrr::map( ~ stringr::str_split(.x, ',[ ]*')) %>%
+    purrr::map(packages, ~ ap[.x, c('Depends', 'Imports')]) |>
+    purrr::map( ~ stringr::str_replace_all(.x, '\n', '')) |>
+    purrr::map( ~ stringr::str_split(.x, ',[ ]*')) |>
     purrr::map(purrr::flatten_chr)
-  dependencies = dependency_info %>%
-    purrr::map(stringr::str_split, pattern = ' ') %>%
+  dependencies = dependency_info |>
+    purrr::map(stringr::str_split, pattern = ' ') |>
     purrr::map(purrr::map_chr,  ~ .x[1])
  
   min_versions =
-    dependency_info %>%
-    purrr::map(stringr::str_split, pattern = ' ') %>%
-    purrr::map(purrr::map_chr,  ~ paste(.x[-1], collapse = ' ')) %>%
-    purrr::map(stringr::str_replace, pattern = '\\((.*)\\)', replacement = '\\1') %>%
+    dependency_info |>
+    purrr::map(stringr::str_split, pattern = ' ') |>
+    purrr::map(purrr::map_chr,  ~ paste(.x[-1], collapse = ' ')) |>
+    purrr::map(stringr::str_replace, pattern = '\\((.*)\\)', replacement = '\\1') |>
     purrr::map(stringr::str_replace, pattern = '[^0-9]*([0-9\\.]+)', replacement = '\\1')
   o = purrr::map2(dependencies, min_versions, 
-    ~ purrr::map2(.x, .y, ~ list(package_name = .x, min_version = .y))) %>% str()
+    ~ purrr::map2(.x, .y, ~ list(package_name = .x, min_version = .y)))
   names(o) = packages
   return(o)
 }
