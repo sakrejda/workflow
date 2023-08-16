@@ -4,7 +4,7 @@
 \alias{uscb_path}
 \title{Resource path munging based on characteristics}
 \usage{
-uscb_path(year = 2019, format = "gdb", location = "tiger")
+uscb_path(year = 2022, format = "gdb", location = "tiger")
 }
 \arguments{
 \item{year}{in four digits}

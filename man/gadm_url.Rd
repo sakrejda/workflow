@@ -4,7 +4,7 @@
 \alias{gadm_url}
 \title{Host URL for GADM}
 \usage{
-gadm_url(url = "https://biogeo.ucdavis.edu")
+gadm_url(url = "https://geodata.ucdavis.edu")
 }
 \arguments{
 \item{url}{alternative url to use, defaults to know location}

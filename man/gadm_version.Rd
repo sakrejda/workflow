@@ -4,7 +4,7 @@
 \alias{gadm_version}
 \title{Current GADM version}
 \usage{
-gadm_version(major = 3, minor = 6, type = "dot")
+gadm_version(major = 4, minor = 1, type = "dot")
 }
 \arguments{
 \item{major}{major version to use}
