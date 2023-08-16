@@ -132,8 +132,6 @@ census_geocoder_api_call = function(
   } else {
     rlang::abort("Internal error: 'searchtype' parameter not calculated properly.")
   }
-  cat(url)
-  cat("\n")
   response = httr::GET(url)
   status = httr::http_status(response)
   result = list()
@@ -297,11 +295,11 @@ census_geocoder_multi_batch = function(
     }
     finalized = rep(FALSE, length(coded))
     while(!all(finalized)) {
+      #print(glue::glue("Completion: {progress}%\n", progress = round(mean(finalized)*100)))
       for (i in seq_along(finalized)) {
-          finalized[[i]] = isTRUE(environment(coded[[i]]$then)$private$state != "pending")
-          print(environment(coded[[i]]$then)$private$state)
+          finalized[i] = isTRUE(environment(coded[[i]]$then)$private$state != "pending")
       }
-      later::run_now()
+      Sys.sleep(0.1); later::run_now()
     }
     o = list()
     for (i in seq_along(coded)) {
