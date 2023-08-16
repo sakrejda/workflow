@@ -5,7 +5,7 @@
 #' @return url as string
 #'
 #' @export
-uscb_url = function(url = "https://www2.census.gov") return(url)
+uscb_api_endpoint = function(url = "https://www2.census.gov") return(url)
 
 #' Resource path munging based on characteristics
 #'
@@ -96,7 +96,7 @@ uscb_relative_path = function(
 #'
 #' @export
 uscb_block_relative_path = function(year = 2019, ...) {
-  p = uscb_relative_path(year = year, type = 'block', ...)
+  p = uscb_relative_path(year = year, ...)
   return(p)
 }
 
@@ -107,8 +107,8 @@ uscb_block_relative_path = function(year = 2019, ...) {
 #' @export
 uscb_block_file_url = function(
   year = 2019,
-  ...,
-  host = uscb_url()
+  host = uscb_api_endpoint(),
+  ...
 ) {
   full_url = url_path(host, uscb_block_relative_path(year, ...))
   return(full_url)
@@ -116,8 +116,8 @@ uscb_block_file_url = function(
 
 uscb_block_file_path = function(
   year = 2019,
-  ...,
-  data_dir = data_dir()
+  data_dir = data_dir(),
+  ...
 ) {
   full_path = file.path(data_dir, uscb_block_relative_path(year, ...))
   return(full_path)
@@ -145,10 +145,10 @@ uscb_zip_relative_path = function(year = 2019, ...) {
 #' @export
 uscb_zip_file_url = function(
   year = 2019,
-  ...,
-  data_dir = data_dir()
+  host = uscb_api_endpoint(),
+  ...
 ) {
-  full_path = url_path(data_dir, uscb_zip_relative_path(year, ...))
+  full_path = url_path(host, uscb_zip_relative_path(year, ...))
   return(full_url)
 }
 
@@ -157,8 +157,8 @@ uscb_zip_file_url = function(
 #' @return zip file full path
 uscb_zip_file_path = function(
   year = 2019,
-  ...,
-  data_dir = data_dir()
+  data_dir = data_dir(),
+  ...
 ) {
   full_path = file.path(data_dir, uscb_zip_relative_path(year, ...))
   return(full_path)

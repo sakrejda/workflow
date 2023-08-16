@@ -55,9 +55,9 @@ fetch_gadm = function(code, version = gadm_version(), host = gadm_url(), data_di
 #' @return list of downloaded files written successfully 
 #'
 #' @export
-fetch_uscb_block_gdb = function(code, version = uscb_version(), host = uscb_url(), data_dir = data_dir()) {
-  urls = uscb_block_file_url(code, version, host)
-  paths = uscb_block_file_path(code, version, data_dir)
+fetch_uscb_block_gdb = function(year, host = uscb_api_endpoint(), data_dir = data_dir()) {
+  urls = uscb_block_file_url(year, host)
+  paths = uscb_block_file_path(year, data_dir)
   fetch(urls, paths)
   files = find_files(path = data_dir, name = 'USA', extension = 'gpkg')
   return(files)
