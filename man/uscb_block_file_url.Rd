@@ -4,7 +4,7 @@
 \alias{uscb_block_file_url}
 \title{USCB block gdb zip file full URL}
 \usage{
-uscb_block_file_url(year = 2019, ..., host = uscb_url())
+uscb_block_file_url(year = 2019, host = uscb_api_endpoint(), ...)
 }
 \value{
 zip file URL

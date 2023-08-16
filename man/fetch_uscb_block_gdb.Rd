@@ -4,19 +4,14 @@
 \alias{fetch_uscb_block_gdb}
 \title{Fetch USCB block files}
 \usage{
-fetch_uscb_block_gdb(
-  code,
-  version = uscb_version(),
-  host = uscb_url(),
-  data_dir = data_dir()
-)
+fetch_uscb_block_gdb(year, host = uscb_api_endpoint(), data_dir = data_dir())
 }
 \arguments{
-\item{version}{version to fetch (defaults)}
-
 \item{host}{host to fetch from (defaults)}
 
 \item{data_dir}{directory to place files under}
+
+\item{version}{version to fetch (defaults)}
 }
 \value{
 list of downloaded files written successfully

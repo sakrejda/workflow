@@ -1,0 +1,3 @@
+BUILD_DIR="~/builds/package-testing-workflow"
+ARTIFACT_DIR="~/artifacts/package-testing-workflow"
+DATA_DIR="~/data/package-testing-workflow"

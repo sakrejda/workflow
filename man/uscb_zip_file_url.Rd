@@ -4,7 +4,7 @@
 \alias{uscb_zip_file_url}
 \title{USCB zip code gdb zip full file path}
 \usage{
-uscb_zip_file_url(year = 2019, ..., data_dir = data_dir())
+uscb_zip_file_url(year = 2019, host = uscb_api_endpoint(), ...)
 }
 \value{
 zip file full url
