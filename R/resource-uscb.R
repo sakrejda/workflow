@@ -107,7 +107,7 @@ uscb_block_relative_path = function(year = 2019, ...) {
 #' @export
 uscb_block_file_url = function(
   year = 2019,
-  ...
+  ...,
   host = uscb_url()
 ) {
   full_url = url_path(host, uscb_block_relative_path(year, ...))
