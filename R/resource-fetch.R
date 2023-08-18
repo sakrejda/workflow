@@ -89,8 +89,8 @@ fetch_uscb_tiger_state_gdb = function(
   host = uscb_api_endpoint(), 
   data_dir = workflow::data_dir()
 ) {
-  urls = url_path(hist, uscb_tiger_us_relative_path(year, state, type, format))
-  paths = file.path(data_dir, uscb_tiger_us_relative_path(year, state, type, format))
+  urls = url_path(host, uscb_tiger_state_relative_path(year, state, type, format))
+  paths = file.path(data_dir, uscb_tiger_state_relative_path(year, state, type, format))
   fetch(urls, paths)
   files = find_files(path = data_dir, name = paste0('tlgdb_', year), extension = 'gpkg')
   return(files)
