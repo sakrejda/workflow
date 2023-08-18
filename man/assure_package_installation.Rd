@@ -14,6 +14,9 @@ assure_package_installation(
 \arguments{
 \item{path}{path to list of packages (one per line)}
 }
+\value{
+character vector of packages that failed to install.
+}
 \description{
 Maks sure the list of packages is installed
 }

@@ -14,7 +14,7 @@ url_path = function(...) {
 #'
 #' @param urls urls on host to fetch from
 #' @param paths paths to place files in
-#' @return 
+#' @return paths to downloaded files
 #'
 #' @export
 fetch = function(urls, paths) {
@@ -47,19 +47,51 @@ fetch_gadm = function(code, version = gadm_version(), host = gadm_url(), data_di
   return(files)
 }
 
-#' Fetch USCB block files
+#' Fetch USCB US block files
 #'
-#' @param version version to fetch (defaults)
+#' @param year year version to fetch
+#' @param type either empty string (default) or 'edges' to select between the two availble.
+#' @param format spatial data format, 'gdb' by default
 #' @param host host to fetch from (defaults)
 #' @param data_dir directory to place files under 
 #' @return list of downloaded files written successfully 
 #'
 #' @export
-fetch_uscb_block_gdb = function(year, host = uscb_api_endpoint(), data_dir = data_dir()) {
-  urls = uscb_block_file_url(year, host)
-  paths = uscb_block_file_path(year, data_dir)
+fetch_uscb_tiger_us_gdb = function(
+  year, 
+  type = "block",
+  format = "gdb",
+  host = uscb_api_endpoint(), 
+  data_dir = workflow::data_dir()
+) {
+  urls = url_path(host, uscb_tiger_us_relative_path(year, type, format))
+  paths = file.path(data_dir, uscb_tiger_us_relative_path(year, type, format))
   fetch(urls, paths)
-  files = find_files(path = data_dir, name = 'USA', extension = 'gpkg')
+  files = find_files(path = data_dir, name = paste0('tlgdb_', year), extension = 'gpkg')
   return(files)
 }
 
+#' Fetch USCB state spatial database
+#'
+#' @param year year version to fetch
+#' @param state two-letter code for state abbreviation to cover
+#' @param type either empty string (default) or 'edges' to select between the two availble.
+#' @param host host to fetch from (defaults)
+#' @param data_dir directory to place files under 
+#' @return list of downloaded files written successfully 
+#'
+#' @export
+fetch_uscb_tiger_state_gdb = function(
+  year,
+  state,
+  type = '',
+  format = 'gdb',
+  host = uscb_api_endpoint(), 
+  data_dir = workflow::data_dir()
+) {
+  urls = url_path(hist, uscb_tiger_us_relative_path(year, state, type, format))
+  paths = file.path(data_dir, uscb_tiger_us_relative_path(year, state, type, format))
+  fetch(urls, paths)
+  files = find_files(path = data_dir, name = paste0('tlgdb_', year), extension = 'gpkg')
+  return(files)
+}

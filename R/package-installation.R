@@ -186,7 +186,7 @@ assure_repos = function() {
 #' Maks sure the list of packages is installed
 #'
 #' @param path path to list of packages (one per line)
-#' @return
+#' @return character vector of packages that failed to install.
 #'
 #' @export
 assure_package_installation = function(
