@@ -283,7 +283,7 @@ census_geocoder_multi_batch = function(
     city = rlang::enquo(city)
     state = rlang::enquo(state)
     zip = rlang::enquo(zip)
-    
+    extra_args = list(...) 
     old_plan = future::plan(future::multisession, workers = n_processes)
     on.exit({future::plan(old_plan)}, add = TRUE)
     data = data |>
@@ -291,7 +291,7 @@ census_geocoder_multi_batch = function(
     coded = list()
     for (i in seq_along(data)) {
       coded[[i]] = promises::future_promise(expr = {library(workflow);
-          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
+          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, !!!extra_args)
         }, globals = FALSE)$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
