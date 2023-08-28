@@ -273,6 +273,7 @@ census_geocoder_multi_batch = function(
     cache_dir = workflow::build_dir("census-geocoder-cache"),
     batch_size = 100,
     n_processes = 10,
+    globals = FALSE,
     ...
 ) {
     n_processes;
@@ -289,7 +290,7 @@ census_geocoder_multi_batch = function(
     for (i in seq_along(data)) {
       coded[[i]] = promises::future_promise(expr = {
         census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
-        })$then(
+        }, globals = globals)$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
     }
