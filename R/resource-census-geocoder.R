@@ -292,7 +292,7 @@ census_geocoder_multi_batch = function(
     for (i in seq_along(data)) {
       coded[[i]] = promises::future_promise(expr = {library(workflow);
           census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
-        })$then(
+        }, globals = FALSE)$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
     }
