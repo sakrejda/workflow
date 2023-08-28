@@ -258,9 +258,12 @@ census_geocoder_batch = function(
 #' @param city bare symbol for city column
 #' @param state bare symbol for state column
 #' @param zip bare symbol for zip code column
-#' @param cache_file optional path to file to use to cache results to avoid submitting them
+#' @param cache_dir optional path to file to use to cache results to avoid submitting them
 #'   multiple times. Can be shared between calls or it will be based on a hash of the 
 #'   batch input data.
+#' @param batch_size how many records should be sent to a worker at one time
+#' @param n_processes how many futures workers should there be
+#' @param ... other arguments to the batch geocoder
 #' @return list of geocoded components and resulting tables with some simplified output
 #'
 #' @export
@@ -273,7 +276,6 @@ census_geocoder_multi_batch = function(
     cache_dir = workflow::build_dir("census-geocoder-cache"),
     batch_size = 100,
     n_processes = 10,
-    globals = FALSE,
     ...
 ) {
     n_processes;
@@ -288,9 +290,9 @@ census_geocoder_multi_batch = function(
       dplyr::group_split(batch_id = 0:(dplyr::n() - 1) %/% batch_size)
     coded = list()
     for (i in seq_along(data)) {
-      coded[[i]] = promises::future_promise(expr = {
-        census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
-        }, globals = globals)$then(
+      coded[[i]] = promises::future_promise(expr = {library(workflow);
+          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
+        })$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
     }
