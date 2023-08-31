@@ -280,6 +280,7 @@ census_geocoder_multi_batch = function(
     cache_dir = workflow::build_dir("census-geocoder-cache"),
     batch_size = 100,
     n_processes = 10,
+    lib_paths = .libPaths(),
     ...
 ) {
     n_processes;
@@ -294,7 +295,7 @@ census_geocoder_multi_batch = function(
       dplyr::group_split(batch_id = 0:(dplyr::n() - 1) %/% batch_size)
     coded = list()
     for (i in seq_along(data)) {
-      coded[[i]] = promises::future_promise(expr = {
+      coded[[i]] = promises::future_promise(expr = {.libPaths(lib_paths);
           census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, !!!extra_args)
         }, packages = "workflow")$then(
             onFulfilled = function(x) return(x),
