@@ -235,12 +235,19 @@ census_geocoder_batch = function(
         row_hash = purrr::map_chr(paste0(!!street, !!city, !!state, !!zip), rlang::hash),
         street = !!street, city = !!city, state = !!state, zip = !!zip)
                 
-  responses = batch |>
+  batch_list = batch |>
     dplyr::select(-batch_row) |>
     unique() |>
-    dplyr::group_split(row_hash)
-    purrr::map(census_geocoder_api_call, cache_dir = cache_dir, ...) |>
-    purrr::map(census_geocoder_flatten_result)
+    dplyr::group_split(row_hash) |>
+  if (missing(...)) {
+    responses = batch_list |>
+      purrr::map(census_geocoder_api_call, cache_dir = cache_dir) |>
+      purrr::map(census_geocoder_flatten_result)
+  } else {
+    responses = batch_list |>
+      purrr::map(census_geocoder_api_call, cache_dir = cache_dir) |>
+      purrr::map(census_geocoder_flatten_result)
+  }
       
   coding = batch |>
     dplyr::select(batch_row, row_hash) |>
