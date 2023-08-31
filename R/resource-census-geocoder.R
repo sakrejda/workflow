@@ -98,6 +98,7 @@ census_geocoder_api_call = function(
   vintage = census_geocoder_api_vintage()$vintages  |> purrr::keep(~ .x$isDefault) |> purrr::flatten(),
   cache_dir = workflow::build_dir("census-geocoder-cache")
 ) {
+  endpoint;
   target = target |> purrr::discard(is.na)
   hash = rlang::hash(c(target, endpoint, returntype, benchmark, vintage))
   cache_file = fs::path(cache_dir, hash)
@@ -311,5 +312,5 @@ census_geocoder_multi_batch = function(
     for (i in seq_along(coded)) {
       o[[i]] = environment(coded[[i]]$then)$private$value
     }
-    return(o)
+    return(list(coded = o, promises = coded))
 }
