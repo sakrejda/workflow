@@ -276,7 +276,8 @@ census_geocoder_multi_batch = function(
     city = city, 
     state = state, 
     zip = zip,
-    strategy = future::multisession(workers = parallel::detectCores()/2, rscript_libs = .libPaths()),
+    strategy = future::multisession,
+    strategy_args = list(workers = parallel::detectCores()/2, rscript_libs = .libPaths()),
     cache_dir = workflow::build_dir("census-geocoder-cache"),
     batch_size = 100,
     n_processes = 10,
@@ -288,7 +289,7 @@ census_geocoder_multi_batch = function(
     state = rlang::enquo(state)
     zip = rlang::enquo(zip)
     extra_args = list(...) 
-    old_plan = future::plan(strategy)
+    old_plan = future::plan(strategy, !!!strategy_args)
     on.exit({future::plan(old_plan)}, add = TRUE)
     data = data |>
       dplyr::group_split(batch_id = 0:(dplyr::n() - 1) %/% batch_size)
