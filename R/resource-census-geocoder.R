@@ -106,28 +106,31 @@ census_geocoder_api_call = function(
       return(qs::qread(cache_file))
   }
   searchtype = census_geocoder_api_check_target_components(target)
-  url_root = glue::glue(endpoint, "/", {returntype}, "/", {searchtype}, "?", 
-      "benchmark={benchmark_id}&vintage={vintage_id}",
+  url_root = glue::glue("{endpoint}/{returntype}/{searchtype}?benchmark={benchmark_id}&vintage={vintage_id}",
+    endpoint = endpoint,
     benchmark_id = benchmark$id, vintage_id = vintage$id,
     returntype = returntype, searchtype = searchtype)
   if (searchtype == 'onelineaddress') {
-    url = glue::glue(url_root, "&", "address={onelineaddress}", 
+    url = glue::glue("{url_root}&address={onelineaddress}", 
+      url_root = url_root,
       onelineaddress = stringr::str_replace_all(target$onelineaddress, ' ', '+'))
   } else if (searchtype == 'coordinates') {
     if (returntype != 'geographies') {
       rlang::abort("For a 'coordinates' searchtype the return type *must* be 'geographies'.")
     }
-    url = glue::glue(url_root, "&", "x={x}&y={y}", x = target$x, y = target$y)
+    url = glue::glue("{url_root}&x={x}&y={y}", url_root = url_root, x = target$x, y = target$y)
   } else if (searchtype == 'address') {
-    url = glue::glue(url_root, "&", "street={street}", street = stringr::str_replace_all(target$street, ' ', '+'))
+    url = glue::glue("{url_root}&street={street}", 
+      url_root = url_root, 
+      street = stringr::str_replace_all(target$street, ' ', '+'))
     if ('city' %in% names(target)) {
-      url = glue::glue(url, "&", "city={city}", city = stringr::str_replace_all(target$city, ' ', '+'))
+      url = glue::glue("{url}&city={city}", url = url, city = stringr::str_replace_all(target$city, ' ', '+'))
     }
     if ('state' %in% names(target)) {
-      url = glue::glue(url, "&", "state={state}", state = stringr::str_replace_all(target$state, ' ', '+'))
+      url = glue::glue("{url}&state={state}", url = url, state = stringr::str_replace_all(target$state, ' ', '+'))
     }
     if ('zip' %in% names(target)) {
-      url = glue::glue(url, "&", "zip={zip}", zip = stringr::str_replace_all(target$zip, ' ', '+'))
+      url = glue::glue("{url}&zip={zip}", url = url, zip = stringr::str_replace_all(target$zip, ' ', '+'))
     }
   } else {
     rlang::abort("Internal error: 'searchtype' parameter not calculated properly.")
