@@ -293,9 +293,9 @@ census_geocoder_multi_batch = function(
       dplyr::group_split(batch_id = 0:(dplyr::n() - 1) %/% batch_size)
     coded = list()
     for (i in seq_along(data)) {
-      coded[[i]] = promises::future_promise(expr = {library(workflow);
+      coded[[i]] = promises::future_promise(expr = {
           census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, !!!extra_args)
-        })$then(
+        }, packages = "workflow")$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
     }
