@@ -238,7 +238,7 @@ census_geocoder_batch = function(
   batch_list = batch |>
     dplyr::select(-batch_row) |>
     unique() |>
-    dplyr::group_split(row_hash) |>
+    dplyr::group_split(row_hash)
   if (missing(...)) {
     responses = batch_list |>
       purrr::map(census_geocoder_api_call, cache_dir = cache_dir) |>
