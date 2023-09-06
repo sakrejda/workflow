@@ -271,7 +271,6 @@ census_geocoder_batch = function(
 #'   multiple times. Can be shared between calls or it will be based on a hash of the 
 #'   batch input data.
 #' @param batch_size how many records should be sent to a worker at one time
-#' @param n_processes how many futures workers should there be
 #' @param ... other arguments to the batch geocoder
 #' @return list of geocoded components and resulting tables with some simplified output
 #'
@@ -290,7 +289,6 @@ census_geocoder_multi_batch = function(
     batch_size = 100,
     lib_paths = .libPaths()
 ) {
-    n_processes;
     street = rlang::enquo(street)
     city = rlang::enquo(city)
     state = rlang::enquo(state)
