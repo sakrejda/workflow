@@ -221,8 +221,11 @@ census_geocoder_batch = function(
     city = city, 
     state = state, 
     zip = zip,
-    cache_dir = workflow::build_dir("census-geocoder-cache"),
-    ...
+    endpoint = census_geocoder_api_endpoint(),
+    returntype = "locations", # or "geographies"
+    benchmark = census_geocoder_api_benchmarks() |> purrr::keep(~ .x$isDefault) |> purrr::flatten(), 
+    vintage = census_geocoder_api_vintage()$vintages  |> purrr::keep(~ .x$isDefault) |> purrr::flatten(),
+    cache_dir = workflow::build_dir("census-geocoder-cache")
 ) {
   street = rlang::enquo(street)
   city = rlang::enquo(city)
@@ -235,19 +238,14 @@ census_geocoder_batch = function(
         row_hash = purrr::map_chr(paste0(!!street, !!city, !!state, !!zip), rlang::hash),
         street = !!street, city = !!city, state = !!state, zip = !!zip)
                 
-  batch_list = batch |>
+  responses = batch |>
     dplyr::select(-batch_row) |>
     unique() |>
-    dplyr::group_split(row_hash)
-  if (missing(...)) {
-    responses = batch_list |>
-      purrr::map(census_geocoder_api_call, cache_dir = cache_dir) |>
-      purrr::map(census_geocoder_flatten_result)
-  } else {
-    responses = batch_list |>
-      purrr::map(census_geocoder_api_call, cache_dir = cache_dir) |>
-      purrr::map(census_geocoder_flatten_result)
-  }
+    dplyr::group_split(row_hash) |>
+    purrr::map(census_geocoder_api_call, endpoint = endpoint, returntype = returntype, 
+      benchmark = benchmark, vintage = vintage, cache_dir = cache_dir) |>
+    purrr::map(census_geocoder_flatten_result)
+  
       
   coding = batch |>
     dplyr::select(batch_row, row_hash) |>
@@ -284,11 +282,13 @@ census_geocoder_multi_batch = function(
     city = city, 
     state = state, 
     zip = zip,
+    endpoint = census_geocoder_api_endpoint(),
+    returntype = "locations", # or "geographies"
+    benchmark = census_geocoder_api_benchmarks() |> purrr::keep(~ .x$isDefault) |> purrr::flatten(), 
+    vintage = census_geocoder_api_vintage()$vintages  |> purrr::keep(~ .x$isDefault) |> purrr::flatten(),
     cache_dir = workflow::build_dir("census-geocoder-cache"),
     batch_size = 100,
-    n_processes = 10,
-    lib_paths = .libPaths(),
-    ...
+    lib_paths = .libPaths()
 ) {
     n_processes;
     street = rlang::enquo(street)
@@ -302,7 +302,9 @@ census_geocoder_multi_batch = function(
     coded = list()
     for (i in seq_along(data)) {
       coded[[i]] = promises::future_promise(expr = {.libPaths(lib_paths); library(workflow);
-          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip, cache_dir, ...)
+          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip,
+            endpoint = endpoint, returntype = returntype, 
+            benchmark = benchmark, vintage = vintage, cache_dir = cache_dir)
         })$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
