@@ -324,8 +324,9 @@ census_geocoder_multi_batch = function(
       dplyr::group_split(batch_id = 0:(dplyr::n() - 1) %/% batch_size)
     coded = list()
     for (i in seq_along(data)) {
+      batch = data[[i]]
       coded[[i]] = promises::future_promise(expr = {.libPaths(lib_paths); library(workflow);
-          census_geocoder_batch(data[[i]], !!street, !!city, !!state, !!zip,
+          census_geocoder_batch(batch, !!street, !!city, !!state, !!zip,
             endpoint = endpoint, returntype = returntype, 
             benchmark = benchmark, vintage = vintage, cache_dir = cache_dir)
         })$then(
@@ -347,8 +348,7 @@ census_geocoder_multi_batch = function(
     merged = list(
       batch = o |> purrr::map(~ .x$batch) |> dplyr::bind_rows(),
       coding = o |> purrr::map(~ .x$coding) |> dplyr::bind_rows(),
-      responses = o |> purrr::map(~ tibble::tibble(responses = .x$responses)) |> 
-        dplyr::bind_rows()
+      responses = o |> purrr::map(~ .x$responses)
     )
     return(list(coded = merged, promises = coded))
 }
