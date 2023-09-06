@@ -197,8 +197,8 @@ census_geocoder_flatten_result = function(x) {
             mtfcc_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$MTFCC,
             centroid_latitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$CENTLAT),
             centroid_longitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$CENTLON),
-            internal_pt_latitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPLAT),
-            internal_pt_longitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPLON),
+            internal_pt_latitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPTLAT),
+            internal_pt_longitude = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPTLON),
             state_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$STATE),
             county_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$COUNTY),
             tract_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$TRACT),
@@ -218,8 +218,8 @@ census_geocoder_flatten_result = function(x) {
             geo_id  = NA_character_, o_id = NA_character_, object_id = NA_character_,
             functional_status_code = NA_character_, lsadc_code = NA_character_, mtfcc_code = NA_character_, 
             centroid_latitude = NA_real_, centroid_longitude = NA_real_, internal_pt_latitude = NA_real_, internal_pt_longitude = NA_real_,
-            state_code = NA_character_, county_code = NA_character_, tract_code = NA_character_, tract_dot_code = NA_character_,
-            tract_name = NA_character_, tract_land_area = NA_real_, tract_water_area = NA_real_)        
+            state_code_numeric = NA_character_, county_code_numeric = NA_character_, tract_code_numeric = NA_character_, 
+            tract_dot_code = NA_character_, tract_name = NA_character_, tract_land_area = NA_real_, tract_water_area = NA_real_)        
     }
     
     x$address_tibble = address_tibble
