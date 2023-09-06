@@ -189,9 +189,9 @@ census_geocoder_flatten_result = function(x) {
                 city, state, zip_code, one_line_address, 
                 longitude, latitude)
           tract_tibble = tibble::tibble_row(
-            geo_id = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$GEOID,
-            o_id = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OID,
-            object_id = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OBJECTID,
+            geo_id = as_character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$GEOID),
+            o_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OID),
+            object_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OBJECTID),
             functional_status_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$FUNCSTAT,
             lsadc_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$LSADC,
             mtfcc_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$MTFCC,
@@ -199,13 +199,13 @@ census_geocoder_flatten_result = function(x) {
             centroid_longitude = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$CENTLON,
             internal_pt_latitude = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPLAT,
             internal_pt_longitude = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$INTPLON,
-            state_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$STATE,
-            county_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$COUNTY,
-            tract_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$TRACT,
-            tract_dot_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$BASENAME,
+            state_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$STATE),
+            county_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$COUNTY),
+            tract_code_numeric = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$TRACT),
+            tract_dot_code = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$BASENAME),
             tract_name = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$NAME,
-            tract_land_area = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREALAND,
-            tract_water_area = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREAWATER)
+            tract_land_area = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREALAND),
+            tract_water_area = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREAWATER))
     } else {
         address_tibble = tibble::tibble(
             tiger_line_id = NA_character_, from_address = NA_character_, to_address = NA_character_, side = NA_character_,
