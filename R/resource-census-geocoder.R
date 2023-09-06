@@ -189,7 +189,7 @@ census_geocoder_flatten_result = function(x) {
                 city, state, zip_code, one_line_address, 
                 longitude, latitude)
           tract_tibble = tibble::tibble_row(
-            geo_id = as_character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$GEOID),
+            geo_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$GEOID),
             o_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OID),
             object_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OBJECTID),
             functional_status_code = r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$FUNCSTAT,
@@ -339,9 +339,10 @@ census_geocoder_multi_batch = function(
       for (i in seq_along(finalized)) {
           finalized[i] = isTRUE(environment(coded[[i]]$then)$private$state != "pending")
       }
-      Sys.sleep(0.1); later::run_now()
+      Sys.sleep(.1); later::run_now()
     }
     o = list()
+    Sys.sleep(2)
     for (i in seq_along(coded)) {
       o[[i]] = environment(coded[[i]]$then)$private$value
     }
