@@ -188,6 +188,7 @@ census_geocoder_flatten_result = function(x) {
                 suffix_type, suffix_direction, suffix_qualifier,
                 city, state, zip_code, one_line_address, 
                 longitude, latitude)
+        if (!is.null(r$addressMatches[[1]]$geographies)) {
           tract_tibble = tibble::tibble_row(
             geo_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$GEOID),
             o_id = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$OID),
@@ -206,6 +207,7 @@ census_geocoder_flatten_result = function(x) {
             tract_name = as.character(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$NAME),
             tract_land_area = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREALAND),
             tract_water_area = as.numeric(r$addressMatches[[1]]$geographies[['Census Tracts']][[1]]$AREAWATER))
+        }
     } else {
         address_tibble = tibble::tibble(
             tiger_line_id = NA_character_, from_address = NA_character_, to_address = NA_character_, side = NA_character_,
@@ -275,7 +277,8 @@ census_geocoder_batch = function(
   coding = batch |>
     dplyr::select(batch_row, row_hash) |>
     dplyr::left_join(
-        y = purrr::map(responses, ~ dplyr::bind_cols(row_hash = .x$target[['row_hash']], .x$address_tibble)) |> dplyr::bind_rows(),
+        y = purrr::map(responses, ~ dplyr::bind_cols(row_hash = .x$target[['row_hash']], .x$address_tibble, .x$tract_tibble)) |> 
+          dplyr::bind_rows(),
         by = 'row_hash')
   
   list(batch = batch, coding = coding, responses = responses)
