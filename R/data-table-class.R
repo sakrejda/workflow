@@ -159,6 +159,29 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.save_local()
       return(self)
     },
+    select = function(...) {
+      private$.load_local()
+      original_colnames = private$.colnames
+      data = private$.data
+      data = dplyr::select(data, ...)
+      private$.data = data
+      private$.colnames = colnames(data)
+      private$.save_local()
+      return(self)
+    },
+    left_join = function(y, by) {
+      private$.load_local()
+      original_colnames = private$.colnames
+      data = private$.data
+      data = left_join(x = data, y = y, by = by, na_matches = "never", multiple = "first", unmatched = "drop")
+      if (!all(original_colnames %in% colnames(data))) {
+        rlang::abort("Error: `left_join` is modifying original column names.")
+      }
+      private$.data = data
+      private$.colnames = colnames(data)
+      private$.save_local()
+      return(self)
+    },
     process_corrections = function() {
       private$.apply_corrections()
       return(self)
