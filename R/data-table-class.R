@@ -78,13 +78,13 @@ DataTable = R6::R6Class(classname = "DataTable",
       return(check)
     },
     correct = function(...) {
+      private$.load_local()
       args = list(...)
       cl = purrr::map_chr(args, class)
       for (i in seq_along(args)) {
         if (cl[i] == 'list-of-corrections') {
           purrr::lift_dl(self$correct)(args[[i]])
         } else if (cl[i] == 'pattern-fix') {
-          private$.load_local()
           column = args[[i]]$column
           record_id_idx = stringr::str_detect(private$.data[[column]], args[[i]]$pattern) |> which()
           if (length(record_id_idx) > 0) {
@@ -97,7 +97,6 @@ DataTable = R6::R6Class(classname = "DataTable",
             purrr::lift_dl(self$correct)(fixes)
           }
         } else if (cl[i] == 'single-fix') {
-          private$.load_local()
           if (!(args[[i]]$column %in% private$.colnames)) {
             private$.logger("Column '{name}' is not contained",
                             " in the current data.", name = ars[[i]]$column)
@@ -110,7 +109,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           private$.corrections[[n+1]] = args[[i]]
           private$.logger("For file '{file_name}', ",
                           "inserted correction for column '{column}' ",
-                          "in record '{record_id}' from '{from}' to {to}.",
+                          "in record '{record_id}' from '{from}' to '{to}'.",
                           file_name = private$.file_name, 
                           column = args[[i]]$column,
                           record_id = args[[i]]$record_id,
