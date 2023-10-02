@@ -342,7 +342,7 @@ census_geocoder_multi_batch = function(
       for (i in seq_along(finalized)) {
           finalized[i] = isTRUE(environment(coded[[i]]$then)$private$state != "pending")
       }
-      Sys.sleep(.1); later::run_now()
+      later::run_now()
     }
     o = list()
     Sys.sleep(2)
