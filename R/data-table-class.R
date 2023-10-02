@@ -169,6 +169,14 @@ DataTable = R6::R6Class(classname = "DataTable",
       private$.save_local()
       return(self)
     },
+    arrange = function(...) {
+      private$.load_local()
+      data = private$.data
+      data = dplyr::arrange(data, ...)
+      private$.data = data
+      private$.save_local()
+      return(self)
+    },
     left_join = function(y, by) {
       private$.load_local()
       original_colnames = private$.colnames
@@ -232,6 +240,7 @@ DataTable = R6::R6Class(classname = "DataTable",
     }
   ),
   private = list(
+    .id = character(),
     .corrections = list(),
     .definitions = list(),
     .retrieve = rlang::quo(),
@@ -374,7 +383,7 @@ DataTable = R6::R6Class(classname = "DataTable",
           name = x$name, standard_name = x$standard_name)
       }
     },
-    .load_cached = function(...) {
+    .load_cached = function(...) {   ## FIXME: first calculation of hashes inserted
       private$.update_cached_file(!!!private$.dots)
       private$.logger("Loading file from: {local_path}", 
         local_path = private$.local_path)
@@ -388,6 +397,12 @@ DataTable = R6::R6Class(classname = "DataTable",
         private$.logger(message)
         rlang::abort(message = message,
           load_cmd = private$.load, local_data = local_data)
+      }
+      if (length(private$.id) == 0) {
+        private$.data = private$.data |>
+          dplyr::mutate(.row_id = uuid::UUIDgenerate(use.time = FALSE, n = dplyr::n(), output = 'string')) |>
+          dplyr::select(.row_id, tidyselect::everything())
+        private$.id = uuid::UUIDgenerate(use.time = FALSE)
       }
       return(private$.local_path)
     },
@@ -536,7 +551,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       } else {
         private$.logger("Loading file to: {local_path}",
           local_path = private$.local_path)
-        local_data = c(list( 
+        local_data = c(list(
           .source_path = private$.source_path,
           .local_path = private$.local_path), list(...))
         fetched = try(rlang::eval_tidy(

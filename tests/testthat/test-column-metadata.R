@@ -6,4 +6,5 @@ testthat::test_that("Simple renames work.", {
            workflow::column(name = 'd', standard_name = 'q'),
            workflow::column(name = 'z', standard_name = 'b'))
   zz = workflow::combine_definitions(z)
+  testthat::expect_length(zz, 5)
 })
