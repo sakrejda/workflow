@@ -331,7 +331,8 @@ census_geocoder_multi_batch = function(
       coded[[i]] = promises::future_promise(expr = {.libPaths(lib_paths); library(workflow);
           census_geocoder_batch(batch, !!street, !!city, !!state, !!zip,
             endpoint = endpoint, returntype = returntype, 
-            benchmark = benchmark, vintage = vintage, cache_dir = cache_dir)
+            benchmark = benchmark, vintage = vintage, cache_dir = cache_dir);
+          rm(batch); gc()
         })$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
