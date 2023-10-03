@@ -335,6 +335,7 @@ census_geocoder_multi_batch = function(
         })$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
+      later::run_now()
     }
     finalized = rep(FALSE, length(coded))
     while(!all(finalized)) {
@@ -342,7 +343,7 @@ census_geocoder_multi_batch = function(
       for (i in seq_along(finalized)) {
           finalized[i] = isTRUE(environment(coded[[i]]$then)$private$state != "pending")
       }
-      later::run_now()
+      later::run_now(timeoutSecs = 0.1)
     }
     o = list()
     Sys.sleep(2)
