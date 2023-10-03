@@ -352,9 +352,9 @@ census_geocoder_multi_batch = function(
       o[[i]] = environment(coded[[i]]$then)$private$value
     }
     merged = list(
-      batch = o |> purrr::map(~ .x$batch) |> dplyr::bind_rows(),
-      coding = o |> purrr::map(~ .x$coding) |> dplyr::bind_rows(),
-      responses = o |> purrr::map(~ .x$responses)
+      batch = o |> purrr::keep(is.list) |> purrr::map(~ .x$batch) |> dplyr::bind_rows(),
+      coding = o |> purrr::keep(is.list) |> purrr::map(~ .x$coding) |> dplyr::bind_rows(),
+      responses = o |> purrr::keep(is.list) |> purrr::map(~ .x$responses)
     )
     return(list(coded = merged, promises = coded))
 }
