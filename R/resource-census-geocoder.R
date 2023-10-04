@@ -329,14 +329,15 @@ census_geocoder_multi_batch = function(
     for (i in seq_along(data)) {
       batch = data[[i]]
       coded[[i]] = promises::future_promise(expr = {.libPaths(lib_paths); library(workflow);
-          census_geocoder_batch(batch, !!street, !!city, !!state, !!zip,
+          data = census_geocoder_batch(batch, !!street, !!city, !!state, !!zip,
             endpoint = endpoint, returntype = returntype, 
             benchmark = benchmark, vintage = vintage, cache_dir = cache_dir);
-          rm(batch); gc()
+          gc(); data
         })$then(
             onFulfilled = function(x) return(x),
             onRejected = function(x) return(x))
       later::run_now()
+      rm(batch); gc()
     }
     finalized = rep(FALSE, length(coded))
     while(!all(finalized)) {
@@ -352,9 +353,9 @@ census_geocoder_multi_batch = function(
       o[[i]] = environment(coded[[i]]$then)$private$value
     }
     merged = list(
-      batch = o |> purrr::keep(is.list) |> purrr::map(~ .x$batch) |> dplyr::bind_rows(),
-      coding = o |> purrr::keep(is.list) |> purrr::map(~ .x$coding) |> dplyr::bind_rows(),
-      responses = o |> purrr::keep(is.list) |> purrr::map(~ .x$responses)
+      batch = o |> purrr::map(~ .x$batch) |> dplyr::bind_rows(),
+      coding = o |> purrr::map(~ .x$coding) |> dplyr::bind_rows(),
+      responses = o |> purrr::map(~ .x$responses)
     )
     return(list(coded = merged, promises = coded))
 }
