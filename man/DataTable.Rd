@@ -18,6 +18,9 @@ returned as an object.  Exported but probably used through helper functions.
 \item \href{#method-DataTable-define}{\code{DataTable$define()}}
 \item \href{#method-DataTable-rename}{\code{DataTable$rename()}}
 \item \href{#method-DataTable-mutate}{\code{DataTable$mutate()}}
+\item \href{#method-DataTable-select}{\code{DataTable$select()}}
+\item \href{#method-DataTable-arrange}{\code{DataTable$arrange()}}
+\item \href{#method-DataTable-left_join}{\code{DataTable$left_join()}}
 \item \href{#method-DataTable-process_corrections}{\code{DataTable$process_corrections()}}
 \item \href{#method-DataTable-process_definitions}{\code{DataTable$process_definitions()}}
 \item \href{#method-DataTable-attributes}{\code{DataTable$attributes()}}
@@ -87,6 +90,33 @@ returned as an object.  Exported but probably used through helper functions.
 \subsection{Method \code{mutate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DataTable$mutate(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DataTable-select"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-select}{}}}
+\subsection{Method \code{select()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$select(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DataTable-arrange"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-arrange}{}}}
+\subsection{Method \code{arrange()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$arrange(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DataTable-left_join"></a>}}
+\if{latex}{\out{\hypertarget{method-DataTable-left_join}{}}}
+\subsection{Method \code{left_join()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DataTable$left_join(y, by)}\if{html}{\out{</div>}}
 }
 
 }

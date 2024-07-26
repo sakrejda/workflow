@@ -10,8 +10,13 @@ census_geocoder_batch(
   city = city,
   state = state,
   zip = zip,
-  cache_dir = workflow::build_dir("census-geocoder-cache"),
-  ...
+  endpoint = census_geocoder_api_endpoint(),
+  returntype = "locations",
+  benchmark = purrr::flatten(purrr::keep(census_geocoder_api_benchmarks(),
+    ~.x$isDefault)),
+  vintage = purrr::flatten(purrr::keep(census_geocoder_api_vintage()$vintages,
+    ~.x$isDefault)),
+  cache_dir = workflow::build_dir("census-geocoder-cache")
 )
 }
 \arguments{

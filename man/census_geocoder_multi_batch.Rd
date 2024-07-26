@@ -10,10 +10,15 @@ census_geocoder_multi_batch(
   city = city,
   state = state,
   zip = zip,
+  endpoint = census_geocoder_api_endpoint(),
+  returntype = "locations",
+  benchmark = purrr::flatten(purrr::keep(census_geocoder_api_benchmarks(),
+    ~.x$isDefault)),
+  vintage = purrr::flatten(purrr::keep(census_geocoder_api_vintage()$vintages,
+    ~.x$isDefault)),
   cache_dir = workflow::build_dir("census-geocoder-cache"),
   batch_size = 100,
-  n_processes = 10,
-  ...
+  lib_paths = .libPaths()
 )
 }
 \arguments{
@@ -25,11 +30,15 @@ census_geocoder_multi_batch(
 
 \item{zip}{bare symbol for zip code column}
 
-\item{batch}{data frame containing columns with parts of the address}
-
-\item{cache_file}{optional path to file to use to cache results to avoid submitting them
+\item{cache_dir}{optional path to file to use to cache results to avoid submitting them
 multiple times. Can be shared between calls or it will be based on a hash of the
 batch input data.}
+
+\item{batch_size}{how many records should be sent to a worker at one time}
+
+\item{batch}{data frame containing columns with parts of the address}
+
+\item{...}{other arguments to the batch geocoder}
 }
 \value{
 list of geocoded components and resulting tables with some simplified output
