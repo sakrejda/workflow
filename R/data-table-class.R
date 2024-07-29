@@ -52,7 +52,7 @@ DataTable = R6::R6Class(classname = "DataTable",
       uri,
       rpath,
       retrieve = rdrop2::drop_download(
-        path = .source_path, local_path = .local_path),
+        path = .source_path, local_path = fs::path_dir(.local_path)),
       load = haven::read_sas(data_file = .local_path),
       .data_dir = workflow::data_dir(),
       .build_dir = workflow::build_dir(),
