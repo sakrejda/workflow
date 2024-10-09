@@ -391,7 +391,8 @@ DataTable = R6::R6Class(classname = "DataTable",
         rlang::eval_tidy(expr = private$.load, data = local_data))
       if ("try-error" %in% class(private$.data)) {
         message = glue::glue("failed to load remote file ",
-          "from cache at {private$.local_path} using command '{cmd}'.",
+          "from cache at {local_path} using command '{cmd}'.",
+          local_path = private$.local_path
           cmd = rlang::quo_text(private$.load))
         private$.logger(message)
         rlang::abort(message = message,
